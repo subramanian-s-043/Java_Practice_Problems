@@ -1,136 +1,126 @@
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
 public class Main {
-	 public static void main(String[] args) throws IOException, InterruptedException{
+	private static String[] listOfPackages(String directory)
+	{
+		File files=new File(directory);
+		return files.list();
+	}
+	private static String initialPath() {
+		try {
+			return new File(".").getCanonicalPath() + "\\src\\com\\subramanians";
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		return null;
+	}
+	private static boolean isValidChoice(String input, int availableCount) {
+		if(!input.matches("[0-9]+")) 
+		{
+			System.out.println("Please enter the valid input.");
+			return false;
+		}
+		int choice = Integer.parseInt(input);
+		if(choice+1>availableCount||choice<1) 
+		{
+			System.out.println("Please choose the valid option.");
+			return false;
+		}
+		return true;
+	}
+	 public static void main(String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException
+	 {
 		 	Scanner sc=new Scanner(System.in);
-		 	boolean run = true;
+	        System.out.println("********************************************");
+	        System.out.println("\t CONSOLE APPLICATION  \t");
+		 	String path=initialPath();
+		 	Stack<String> pathStack=new Stack<String>();
+		 	pathStack.push(path);
 		 	do
 		 	{
-		 		Set<String> files=new HashSet<>();
-		        System.out.println("*************");
-		        listOfPackage("C:\\Users\\subra\\eclipse-workspace\\ZSGS\\Test\\src",files);
-		        String[] packs=files.toArray(new String[files.size()]);
-		        for(int i=0;i<packs.length;i++)
-		        {
-		        	System.out.println((i+1)+". "+packs[i]);
-		        }
-		        System.out.println("Enter the Package Number or Press 0 to Exit:");
-		        int packNumb=sc.nextInt();
-		        if(packNumb==0)
-		        {
-		        	run=false;
-		        	break;
-		        }
-		        System.out.println("********");
-		        List<String> classes = listClassesInPackage(packs[packNumb-1]);
-		        for(int i=0;i<classes.size();i++)
-		        {
-		        	System.out.println((i+1)+". "+classes.get(i));
-		        }
-		        System.out.println("Enter your Choice To Run The Program or 0 to Exit:");
-		        int program=sc.nextInt();
-		        if(program==0)
-		        {
-		        	run=false;
-		        	break;
-		        }
-		        String clas=classes.get(program-1);
-		        runjavaProgram(clas,packs[packNumb-1]);	
-		 	}while(run);
-		 	System.out.println("Java Console Application Terminated Successfully");
+		 		System.out.println("******************************************************************");
+		 		System.out.println("DIR:"+" "+ path  +" ");
+		        System.out.println("******************************************************************");
+			 	String[] folder=listOfPackages(path);
+			 	String fileName="";
+			 	for(int i=0;i<folder.length;i++)
+			 	{
+			 		if(folder[i].contains(".java"))
+			 			System.out.println(i+1+". "+folder[i]+ "  (Executable Java File)");
+			 		else
+			 			System.out.println(i+1+". "+folder[i]+"  (Folder)");
+					if (i + 1 == folder.length) {
+						if (pathStack.size() == 1) {
+							System.out.println(i + 2 + ". " + "Exit");
+						} else {
+							System.out.println(i + 2 + ". " + "Go back");
+							System.out.println(i + 3 + ". " + "Exit");
+						}
+					}
+			 	}
+			 	System.out.println("Enter Your Choice : ");
+			 	String input=sc.nextLine();
+			 	if (!isValidChoice(input, folder.length+3 ))
+			 	{
+					continue;
+				}
+				int choice = Integer.parseInt(input);
+				if (choice == folder.length+1 || choice==folder.length + 2) {
+					if (pathStack.size() == 1 || choice==folder.length + 2) {
+						System.out.println("******************************************************************");
+						System.out.println("Application Closed succesfully,Press Run to Start Again.");
+						return;
+					}
+					pathStack.pop();
+					path = pathStack.peek();
+				} else {
+					fileName = folder[choice - 1];
+					if (fileName.contains(".java")) {
+						try {
+							System.out.println("******************************************************************");
+							executeProgram(path, fileName);
+							System.out.println("******************************************************************");
+							System.out.println("Program Executed succesfully.");
+						} catch (IllegalArgumentException e) {
+							e.printStackTrace();
+						}
+						continue;
+					} else {
+						path = path + "\\" + fileName;
+						pathStack.push(path);
+					}
+				}
+		 	}while(true);
+//		 	System.out.println("Java Console Application Terminated Successfully");
 	}
-    public static List<String> listClassesInPackage(String packageName) {
-        List<String> classNames = new ArrayList<>();
-        String packagePath = packageName.replace('.', '/');
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        File packageDirectory = new File(classLoader.getResource(packagePath).getFile());
-        if(packageDirectory.isDirectory()) 
-        {
-            File[] files = packageDirectory.listFiles();
-            if(files != null)
-            {
-                for(File file : files) 
-                {
-                    if(file.isFile() && file.getName().endsWith(".class"))
-                    {
-                        String className = packageName+"."+file.getName().substring(0, file.getName().lastIndexOf('.'));
-                        classNames.add(className);
-                    }
-                }
-            }
-        }
-        return classNames;
-    }
-    public static void listOfPackage(String directoryName, Set<String> pack) {
-        File directory = new File(directoryName);
-        File[] fList = directory.listFiles();
-        for (File file : fList) {
-            if (file.isFile()) {
-                String path=file.getPath();
-                int srt=(path.indexOf("src"))+4;
-                int end=path.lastIndexOf("\\");
-                if(end>srt)
-                {
-                    String packName=path.substring(srt, end);
-                    pack.add(packName.replace('\\', '.'));	
-                }
-            } else if (file.isDirectory()) {
-                listOfPackage(file.getAbsolutePath(), pack);
-            }
-        }
-    }
-    public static void runjavaProgram(String className,String packPath) throws IOException, InterruptedException {
-    	String updatePackPath=className;
-    	String path="src/"+className.replace('.','/');
-    	System.out.println(updatePackPath);
-    	final String JAVA_FILE_LOCATION = "C:\\Users\\subra\\eclipse-workspace\\ZSGS\\Test\\src"+" com.subramanians.Problem1.java";
-    	String command[] = {"javac",JAVA_FILE_LOCATION};
-    	ProcessBuilder processBuilder = new ProcessBuilder(command);
-    	Process process = processBuilder.start();
-    	if( process.getErrorStream().read() != -1 ){
-    	print("Compilation Errors",process.getErrorStream());
-    	}else {
-    		System.out.println("Sucess!!");
-    	}
-    	if( process.exitValue() == 0 ){
-    		process = new ProcessBuilder(new String[]{"java","C:\\Users\\subra\\eclipse-workspace\\ZSGS\\Test\\src\\com\\subramanians","Problem1"}).start();
-    		if( process.getErrorStream().read() != -1 ){
-    		print("Errors ",process.getErrorStream());
-    		}
-    		else{
-    		print("Output ",process.getInputStream());
-    		}
+		private static void executeProgram(String directoryPath, String className) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, InstantiationException {
+			int index = directoryPath.indexOf("\\src\\");
+			directoryPath = directoryPath.substring(index + 5) + "." + className.substring(0, className.lastIndexOf('.'));
+			directoryPath = directoryPath.replace("\\", ".");
+			try {
+				Class obj = Class.forName(directoryPath);
+				Object instance = obj.newInstance();
+				try {
+			    	Method method = obj.getMethod("mainFunction", null);
+			    	Object t=method.invoke(instance, null);
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				}
 
-    		}
-    }
-    	private static void print(String status,InputStream input) throws IOException{
-    		BufferedReader in = new BufferedReader(new InputStreamReader(input));
-    		System.out.println("************* "+status+"***********************");
-    		String line = null;
-    		while((line = in.readLine()) != null ){
-    		System.out.println(line);
-    		}
-    }
+			} catch (ClassNotFoundException e) {
+				System.out.println("That program doesn't exist.");
+			}
+			return;
+
+		}
     	
 }
-
-
-
-//JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-//int compilationResult = compiler.run(null, null, null, path+".java");
-//if (compilationResult == 0) {
-//  System.out.println("Compilation is successful.");
-//  Process process = Runtime.getRuntime().exec("java " + path);
-//  BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//  String line;
-//  while ((line = stdInput.readLine()) != null) {
-//      System.out.println(line);
-//  }
-//} else {
-//  System.out.println("Compilation failed.");
-//}

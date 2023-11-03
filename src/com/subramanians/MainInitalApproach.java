@@ -7,13 +7,14 @@ import java.lang.reflect.Method;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
-public class Main {
+public class MainInitalApproach {
 	 public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException, InstantiationException{
 		 	Scanner sc=new Scanner(System.in);
 		 	boolean run = true;
 		 	do
 		 	{
 		 		Set<String> files=new HashSet<>();
+		 		boolean inPack = true;
 		        System.out.println("*************************************************************************");
 		        listOfPackage("src/",files);
 		        String[] packs=files.toArray(new String[files.size()]);
@@ -95,8 +96,8 @@ public class Main {
         }
     }
     public static void runjavaProgram(String className,String packPath) throws IOException, InterruptedException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException, InstantiationException {
-    	
     	Class<?> externalClass = Class.forName(className);
+    	System.out.println(externalClass);
     	Object instance = externalClass.newInstance();
     	Method method = externalClass.getMethod("mainFunction", null);
     	Object t=method.invoke(instance, null);
