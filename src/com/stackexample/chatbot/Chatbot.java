@@ -1,4 +1,5 @@
 package com.stackexample.chatbot;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class Chatbot {
 		Object o;
 		JSONObject jsonobj;
 		try {
-			o = parser.parse(new FileReader("C:\\Users\\subra\\Downloads\\test.json"));
+			o = parser.parse(new FileReader(new File(".").getCanonicalPath()+"\\src\\com\\stackexample\\chatbot\\StoreData.json"));
 			jsonobj=(JSONObject) o;
 			JSONObject name=(JSONObject) jsonobj.get(level);
 			JSONArray arr=(JSONArray)name.get(choice);
