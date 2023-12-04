@@ -1,0 +1,25 @@
+{
+    "TSI_MS":[
+    {
+        "TrainNo":"12661",
+        "TrainName":"Pothiagi SF Exp",
+        "Source":"Shenkottai",
+        "Destination":"Chennai",
+        "Boarding":"Tenkasi",
+        "Depature":"18:30",
+        "Arrival":"18:27",
+        "ETA":"6:00",
+        "Duration":"11:30"
+    },
+    {
+        "TrainNo":"12601",
+        "TrainName":"Qln Exp",
+        "Source":"Quilon",
+        "Destination":"Chennai",
+        "Depature":"15:30",
+        "Arrival":"3:30",
+        "Duration":"12:00"
+    }
+    ],
+    "TVL_MS":[]
+}

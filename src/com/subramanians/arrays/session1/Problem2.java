@@ -1,4 +1,4 @@
-package com.subramanians.arrays;
+package com.subramanians.arrays.session1;
 import java.util.Scanner;
 
 public class Problem2 {

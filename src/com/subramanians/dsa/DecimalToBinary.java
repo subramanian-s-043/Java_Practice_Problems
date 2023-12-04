@@ -18,7 +18,7 @@ public class DecimalToBinary {
         }
         return binary; 
     } 
-	public static void main(String[] args) {
+	public static void mainFunction(String[] args) {
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Enter the Decimal Number:");
 		int input=sc.nextInt();
