@@ -1,9 +1,16 @@
 {
     "12661":{
-        "availableLowerBerth":"21",
-        "availableMiddleBerth":"21",
-        "availableUpperBerth":"21",
-        "availableRac":"18",
-        "availableWL":"18"
+        "availableLowerBerth":"1",
+        "availableMiddleBerth":"0",
+        "availableUpperBerth":"0",
+        "availableRac":"1",
+        "availableWL":"1"
+    },
+    "12601":{
+        "availableLowerBerth":"1",
+        "availableMiddleBerth":"0",
+        "availableUpperBerth":"0",
+        "availableRac":"1",
+        "availableWL":"1"
     }
 }

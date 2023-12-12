@@ -1,11 +1,8 @@
 package com.subramanians.trainreservationsystem.bookticket;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import com.subramanians.trainreservationsystem.dto.Passenger;
@@ -14,57 +11,142 @@ import com.subramanians.trainreservationsystem.repo.TrainReservationRepository;
 public class BookTicketViewModel {
 	private BookTicket bookTicket;
 	private JSONArray retrieved;
-	Stack<Passenger> bookedTickets;
-	
-	
-    int availableLowerBerths = 0;//normally 21
-    int availableMiddleBerths = 0;//normally 21
-    int availableUpperBerths = 0;//normally 21
-    int availableRacTickets = 0;//normally 18
-    int availableWaitingList = 0;//normally 10
-
-    Queue<Integer> waitingList = new LinkedList<>();//queue of WL passengers
-    Queue<Integer> racList =  new LinkedList<>();//queu of RAC passengers
-    List<Integer> bookedTicketList =  new ArrayList<>();//list of bookedticket passengers
-
-    List<Integer> lowerBerthsPositions = new ArrayList<>();//normally 1,2,...21
-    List<Integer> middleBerthsPositions = new ArrayList<>();//normally 1,2,...21
-    List<Integer> upperBerthsPositions = new ArrayList<>();//normally 1,2,...21
-    List<Integer> racPositions = new ArrayList<>();//normally 1,2,...18
-    List<Integer> waitingListPositions = new ArrayList<>();//normally 1,2,...10
-
+	TrainReservationRepository repo;   
 	
 	
 	public BookTicketViewModel(BookTicket bookTicket) {
 		this.bookTicket=bookTicket;
-		this.bookedTickets=TrainReservationRepository.getInstance().getBookedHistory();
+		this.repo=TrainReservationRepository.getInstance();
 	}
 
 	public void showTrains(String date,String source,String destination) {
-		retrieved = TrainReservationRepository.getInstance().getTrainDetails(date, source, destination);
+		retrieved = repo.getTrainDetails(date, source, destination);
 		bookTicket.onSuccess(retrieved);
 		return ;
 	}
-
-	public void bookTicket(int choice, Passenger p) {
-		
-	}
-
+	
 	public void getTrainavailability(int choice) {
-		TrainReservationRepository.getInstance().getTrainavailabity((JSONObject) retrieved.get(choice-1));
-		this.availableLowerBerths=TrainReservationRepository.getInstance().getLowerAvailability((JSONObject) retrieved.get(choice-1));
-		for(int i=(21-availableLowerBerths);i<=21;i++)
-		{
-			if(i==0)
-			{
-				i++;
-			}
-			lowerBerthsPositions.add(i);
-		}
-		this.availableMiddleBerths=TrainReservationRepository.getInstance().getMiddleAvailability((JSONObject) retrieved.get(choice-1));
-		this.availableUpperBerths=TrainReservationRepository.getInstance().getUpperAvailability((JSONObject) retrieved.get(choice-1));
-		this.availableRacTickets=TrainReservationRepository.getInstance().getRac((JSONObject) retrieved.get(choice-1));
-		this.availableWaitingList=TrainReservationRepository.getInstance().getWL((JSONObject) retrieved.get(choice-1));
+		repo.getTrainavailabity(choice);
 	}
 	
+	public void bookTicket(int choice, Passenger p) {
+		JSONObject selectedTrain=(JSONObject)retrieved.get(choice-1);
+		p.setTrainNo(Integer.valueOf((String) selectedTrain.get("TrainNo")));
+		if(p.getBerthPreference()=='L' && repo.getAvailableLowerBerths() >0 ||
+			p.getBerthPreference()=='M' && repo.getAvailableMiddleBerths()>0 ||
+			p.getBerthPreference()=='U' && repo.getAvailableUpperBerths()>0)
+		{
+			if(p.getBerthPreference()=='L')
+			{
+				bookTicket.showMessage("Prefered Berth Given!!");
+				String seatNumber=String.valueOf(repo.getLowerBerthsPositions())+"-"+"L";
+				p.setAllottedSeat(seatNumber);
+				repo.removeLowerBerth();
+				p.setTicketStatus((byte) 0);
+				repo.bookedTicket(p);
+				bookTicket.showMessage("PNR: "+p.getPassengerId());
+				bookTicket.showMessage("Ticket Booked Successfully,Seat Number: "+p.getAllottedSeat());
+			}
+			else if(p.getBerthPreference()=='M')
+			{
+				bookTicket.showMessage("Prefered Berth Given!!");
+				String seatNumber=String.valueOf(repo.getMiddleBerthsPositions())+"-"+"M";
+				p.setAllottedSeat(seatNumber);
+				repo.removeMiddleBerth();
+				p.setTicketStatus((byte) 0);
+				repo.bookedTicket(p);
+				bookTicket.showMessage("PNR: "+p.getPassengerId());
+				bookTicket.showMessage("Ticket Booked Successfully,ticket status: CNF/Seat Number: "+p.getAllottedSeat());
+			}
+			else if(p.getBerthPreference()=='U')
+			{
+				bookTicket.showMessage("Prefered Berth Given!!");
+				String seatNumber=String.valueOf(repo.getUpperBerthsPositions())+"-"+"U";
+				p.setAllottedSeat(seatNumber);
+				repo.removeUpperBerth();
+				p.setTicketStatus((byte) 0);
+				repo.bookedTicket(p);
+				bookTicket.showMessage("PNR: "+p.getPassengerId());
+				bookTicket.showMessage("Ticket Booked Successfully,ticket status: CNF/Seat Number: "+p.getAllottedSeat());
+			}
+		}
+		else if(repo.getAvailableLowerBerths() > 0)
+		{
+			bookTicket.showMessage("Lower Berth Given!!");
+			String seatNumber=String.valueOf(repo.getLowerBerthsPositions())+"-"+"L";
+			p.setAllottedSeat(seatNumber);
+			repo.removeLowerBerth();
+			p.setTicketStatus((byte)0);
+			repo.bookedTicket(p);
+			bookTicket.showMessage("PNR: "+p.getPassengerId());
+			bookTicket.showMessage("Ticket Booked Successfully,ticket status: CNF/Seat Number: "+p.getAllottedSeat());
+		}
+		else if(repo.getAvailableMiddleBerths() > 0)
+		{
+			bookTicket.showMessage("Middle Berth Given!!");
+			String seatNumber=String.valueOf(repo.getMiddleBerthsPositions())+"-"+"M";
+			p.setAllottedSeat(seatNumber);
+			repo.removeMiddleBerth();
+			p.setTicketStatus((byte) 0);
+			repo.bookedTicket(p);
+			bookTicket.showMessage("PNR: "+p.getPassengerId());
+			bookTicket.showMessage("Ticket Booked Successfully,ticket status: CNF/Seat Number: "+p.getAllottedSeat());
+		}
+		else if(repo.getAvailableUpperBerths() > 0)
+		{
+			bookTicket.showMessage("Upper Berth Given!!");
+			String seatNumber=String.valueOf(repo.getUpperBerthsPositions())+"-"+"U";
+			p.setAllottedSeat(seatNumber);
+			repo.removeUpperBerth();
+			p.setTicketStatus((byte) 0);
+			repo.bookedTicket(p);
+			bookTicket.showMessage("PNR: "+p.getPassengerId());
+			bookTicket.showMessage("Ticket Booked Successfully,ticket status: CNF/Seat Number: "+p.getAllottedSeat());
+		}
+		else if(repo.getAvailableRacTickets() > 0)
+		{
+			bookTicket.showMessage("No Ticktes Available!!....Booking On RAC");
+			String seatNumber=String.valueOf(repo.getAvailableRacTickets())+"-"+"RAC";
+			p.setAllottedSeat(seatNumber);
+			p.setTicketStatus((byte) 1);
+			repo.removeRAC();
+			repo.bookedTicket(p);
+			repo.addRac(p.getPassengerId());
+			bookTicket.showMessage("PNR: "+p.getPassengerId());
+			bookTicket.showMessage("Ticket Booked Successfully,ticket status: RAC/Position : "+p.getAllottedSeat());
+		}
+		else if(repo.getAvailableWaitingList()>0)
+		{
+			bookTicket.showMessage("Available & RAC Tickets are Full!....Adding to Waiting List");
+			String seatNumber=String.valueOf(repo.getWaitingListPositions())+"-"+"WL";
+			p.setAllottedSeat(seatNumber);
+			p.setTicketStatus((byte) 2);
+			repo.bookedTicket(p);
+			repo.addWL(p.getPassengerId());
+			bookTicket.showMessage("PNR: "+p.getPassengerId());
+			bookTicket.showMessage("Ticket Booked Successfully,ticket status: WL/Position : "+p.getAllottedSeat());			
+		}else
+		{
+			bookTicket.showMessage("Train filled!, please choose another");
+		}
+	}
+	
+	public void errorMsg(String msg)
+	{
+		bookTicket.showMessage(msg);
+	}
+
+	public boolean validateDate(String date) throws DateTimeException {
+		CharSequence t=date;
+		DateTimeFormatter pattern=DateTimeFormatter.ofPattern("dd/M/yyyy");
+	    LocalDate inp= LocalDate.parse(t, pattern);
+	    if(inp.isEqual(LocalDate.now()) || inp.isAfter(LocalDate.now()))
+	    {
+	    	return true;
+	    }else
+	    {
+	    	bookTicket.showMessage("Please Enter Future Date");
+	    	return false;
+	    }
+	}
 }
