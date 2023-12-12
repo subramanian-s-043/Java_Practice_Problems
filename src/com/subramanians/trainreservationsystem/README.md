@@ -22,7 +22,6 @@ Passenger Java:
 •	berthPreference: String
 •	allottedSeat: String
 
-
 Phase-I:
 •	Able to view list of available trains between source and destination
 •	implement RAC , Waiting List features.
