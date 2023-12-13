@@ -56,17 +56,19 @@ public class TrainReservationRepository {
 	public TrainReservationRepository()
 	{
 		try {
-//			Class.forName("com.mysql.cj.jdbc.Driver");
-//			connection=DriverManager.getConnection(url,username,password);
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection=DriverManager.getConnection(url,username,password);
 			readTrainDetails=parser.parse(new FileReader(new File(".").getCanonicalPath()+"\\src\\com\\subramanians\\trainreservationsystem\\TrainDetails.json"));
 			retrievedTrainDetails=(JSONObject) readTrainDetails;
 			readStationCode=parser.parse(new FileReader(new File(".").getCanonicalPath()+"\\src\\com\\subramanians\\trainreservationsystem\\TrainStationCode.json"));
 			retrievedStationCode=(JSONObject) readStationCode;
 		} catch (IOException e) {
 			System.out.println("Error In Fetching Details");
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -82,12 +84,20 @@ public class TrainReservationRepository {
 
 	public JSONArray getTrainDetails(String date,String source,String destination)
 	{
+		/*
+		 * SELECT QUERY
+		 * select * from traindetails where trainSource=${source} AND trainDestination=${destination} AND endDate >= ${date} Order By trainTravelDuration;
+		 *
+		 */
 		String stationCode=(String) retrievedStationCode.get(source.replace(" ", "").toUpperCase())+"_"+retrievedStationCode.get(destination.replace(" ", "").toUpperCase());
 		retrieved= (JSONArray) retrievedTrainDetails.get(stationCode);
 		return retrieved;
 	}
 
 	public void getTrainavailabity(int choice) {
+		/*
+		 * select * from dateschedule where trainNo=${retriveFromList} AND dateOfJourney=${retrieveFromList};
+		 */
 		if(bookedTickets.isEmpty())
 		{
 			JSONObject trainIndex=(JSONObject) retrieved.get(choice-1);
