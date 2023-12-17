@@ -2,6 +2,10 @@ package com.subramanians.tablebooking;
 
 import java.util.Scanner;
 
+import com.subramanians.tablebooking.booktable.BookTableView;
+import com.subramanians.tablebooking.canceltable.CancelView;
+import com.subramanians.tablebooking.viewtable.ViewTable;
+
 public class RestaurantTableBooking {
 	public static void main(String[] args) {
 		RestaurantTableBooking app=new RestaurantTableBooking();
@@ -19,13 +23,16 @@ public class RestaurantTableBooking {
 			switch(choice)
 			{
 			case 1:
-				//Book ticket
+				BookTableView book=new BookTableView();
+				book.getInput();
 				break;
 			case 2:
-				//View Booked Table
+				ViewTable view=new ViewTable();
+				view.getInput();
 				break;
 			case 3:
-				//Cancel Table
+				CancelView cancel=new CancelView();
+				cancel.getInput();
 				break;
 			case 4:
 				run=false;

@@ -36,6 +36,9 @@ public class InterviewPanelRepository {
 	public String currentlyInterviewing() {
 		return !candidatesInQueue.isEmpty() ? candidatesInQueue.peek().getName() : "No One In Queue!!";
 	}
+	public List<Candidate> getCompleted(){
+		return completedcandidates;
+	}
 	private void invite()
 	{
 		TimerTask remove=new TimerTask() {

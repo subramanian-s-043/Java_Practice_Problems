@@ -1,5 +1,9 @@
 package com.subramanians.interviewpanel.viewcandidate;
 
+import java.util.List;
+
+import com.subramanians.interviewpanel.Utility;
+import com.subramanians.interviewpanel.dto.Candidate;
 import com.subramanians.interviewpanel.repo.InterviewPanelRepository;
 
 public class ViewCandidateViewModel {
@@ -15,5 +19,12 @@ public class ViewCandidateViewModel {
 	}
 	public void getTotalCandidate() {
 		viewcandidate.onSuccess("Total Number Of Candidates in Queue: "+String.valueOf(repo.numberOfCandidates()));
+	}
+	public List<Candidate> completed(){
+		if(repo.getCompleted().isEmpty())
+		{
+			viewcandidate.onSuccess(Utility.RED+"Interview Not Started!!"+Utility.RESET);
+		}
+		return repo.getCompleted();
 	}
 }

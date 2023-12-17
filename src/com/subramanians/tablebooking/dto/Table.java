@@ -1,18 +1,26 @@
 package com.subramanians.tablebooking.dto;
 
 public class Table {
-	private String tableNo;
+	private String restaurantName;
+	private int totalNumberOfTable;
 	private int tableCapacity;
-	public Table(String tableNo,int tableCapacity)
+	public Table(String restaurantName,int totalNumberOfTable,int tableCapacity)
 	{
-		setTableNo(tableNo);
+		setRestaurantName(restaurantName);
+		setTotalNumberOfTable(totalNumberOfTable);
 		setTableCapacity(tableCapacity);
 	}
-	public String getTableNo() {
-		return tableNo;
+	public String getRestaurantName() {
+		return restaurantName;
 	}
-	public void setTableNo(String tableNo) {
-		this.tableNo = tableNo;
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
+	}
+	public int getTotalNumberOfTable() {
+		return totalNumberOfTable;
+	}
+	public void setTotalNumberOfTable(int tableNo) {
+		this.totalNumberOfTable = tableNo;
 	}
 	public int getTableCapacity() {
 		return tableCapacity;

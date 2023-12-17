@@ -56,7 +56,12 @@ public class BookTicket {
 		}
 		return;
 	}
-
+	public void printSource() {
+		
+	}
+	public void printDestination() {
+		
+	}
 	public void getDetails() {
 		System.out.println("Enter Date in DD/MM/YYYY: ");
 		String date=scanner.next();

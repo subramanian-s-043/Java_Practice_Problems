@@ -9,7 +9,8 @@
         "Depature":"18:30",
         "Arrival":"18:27",
         "ETA":"6:00",
-        "Duration":"11:30"
+        "Duration":"11:30",
+        "Ticket Fare":"485"
     },
     {
         "TrainNo":"12601",
@@ -18,7 +19,8 @@
         "Destination":"Chennai",
         "Depature":"15:30",
         "Arrival":"3:30",
-        "Duration":"12:00"
+        "Duration":"12:00",
+        "Ticket Fare":"450"
     }
     ],
     "TVL_MS":[]
