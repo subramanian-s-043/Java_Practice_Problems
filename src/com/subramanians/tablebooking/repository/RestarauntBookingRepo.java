@@ -151,7 +151,7 @@ public class RestarauntBookingRepo {
 		return bookedCustomer.isEmpty() ? 1 : bookedCustomer.size();
 	}
 	
-	
+	//Update Availablity
 	
 	public void updateAvailability(Customer c) {
 		try {
@@ -165,7 +165,7 @@ public class RestarauntBookingRepo {
 		}
 	}
 	
-	
+	//Book Table
 	
 	public boolean book(Customer c) {
 		bookedCustomer.add(c);
@@ -191,7 +191,7 @@ public class RestarauntBookingRepo {
 		return false;
 	}
 
-	
+	//Cancel Table
 	
 	public boolean cancelTable(int bookingId) {
 		if(bookedCustomer.isEmpty()) {

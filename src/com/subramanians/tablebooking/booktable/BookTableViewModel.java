@@ -24,6 +24,8 @@ class BookTableViewModel {
 		this.bookTableView=bookTableView;
 		this.repo=RestarauntBookingRepo.getInstance();
 	}
+	
+	
 	public List<LocalDate> generateDates() {
 		LocalDate today=LocalDate.now();
 		for(LocalDate i=today;i.isEqual(today.plusDays(10))|| i.isBefore(today.plusDays(10));i=i.plusDays(1))
@@ -32,11 +34,15 @@ class BookTableViewModel {
 		}
 		return dates;
 	}
+	
+	//Store View Model
 	public void retrieveRestaurant(int option) {
 		currentlyChosen=dates.get(option-1);
 		retrieved=repo.retrieveResutarant(currentlyChosen);
 		bookTableView.printResutaurants(retrieved);
 	}
+	
+	//Book Table
 	public void book(String name,int numberOfpeople) {
 		int availability=repo.getAvailability(restaurantChosen, currentlyChosen);
 		if(availability >=1)
@@ -52,6 +58,35 @@ class BookTableViewModel {
 			bookTableView.showError("Sorry Booking Not Yet Opened!, Please Contact Restaurant.");
 		}
 	}
+	
+	public void setTime(int option) {
+		currentlyChosenTime=availableTime.get(option-1);
+	}
+	
+	
+	public boolean validateNumberOfPeople(int numberOfPeople) {
+		if(numberOfPeople>4)
+		{
+			bookTableView.showError("Maximum 4 people allowed for one booking");
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	
+	public boolean validateName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return false;
+        }
+        for (char c : name.toCharArray()) {
+            if (!Character.isLetter(c)) {
+                return false;
+            }
+        }
+        return true;
+	}
+	
 	public void retrieveAvailability(int option) {
 		restaurantChosen=retrieved.get(option-1).getRestaurantName();
         LocalTime startTime = LocalTime.of(9, 0);
@@ -81,28 +116,5 @@ class BookTableViewModel {
 			availableTime.remove(t);
 		}
 		bookTableView.printAvailableTime(availableTime);
-	}
-	public void setTime(int option) {
-		currentlyChosenTime=availableTime.get(option-1);
-	}
-	public boolean validateNumberOfPeople(int numberOfPeople) {
-		if(numberOfPeople>4)
-		{
-			bookTableView.showError("Maximum 4 people allowed for one booking");
-			return true;
-		}else {
-			return false;
-		}
-	}
-	public boolean validateName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return false;
-        }
-        for (char c : name.toCharArray()) {
-            if (!Character.isLetter(c)) {
-                return false;
-            }
-        }
-        return true;
 	}
 }

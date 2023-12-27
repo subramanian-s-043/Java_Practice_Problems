@@ -74,15 +74,17 @@ public class BookTableView {
 		System.out.println(Utility.GREEN+"Available Timings: "+Utility.RESET);
 		System.out.println(Utility.YELLOW+"Break-Fast"+Utility.RESET);
 		for(LocalTime t:availableTime) {
-			if(t.isAfter(LocalTime.of(8, 0)) &&t.isBefore(LocalTime.of(11, 0)))
-			System.out.println((option++)+"->"+t);
+			if(t.isAfter(LocalTime.of(8, 0)) && t.isBefore(LocalTime.of(11, 0)))
+				System.out.println((option++)+"->"+t);
 		}
+		option+=2;
 		System.out.println(Utility.ROSECOLOR+"==================================================="+Utility.RESET);
 		System.out.println(Utility.YELLOW+"Lunch"+Utility.RESET);
 		for(LocalTime t:availableTime) {
 			if(t.isAfter(LocalTime.of(11, 30)) && t.isBefore(LocalTime.of(16, 0)))
 			System.out.println((option++)+"->"+t);
 		}
+		option+=6;
 		System.out.println(Utility.ROSECOLOR+"==================================================="+Utility.RESET);
 		System.out.println(Utility.YELLOW+"Dinner"+Utility.RESET);
 		for(LocalTime t:availableTime) {

@@ -6,10 +6,12 @@ import com.subramanians.tablebooking.repository.RestarauntBookingRepo;
 public class ViewTableViewModel {
 		ViewTable viewTable;
 		RestarauntBookingRepo repo;
+		
 		public ViewTableViewModel(ViewTable viewTable) {
 			this.viewTable=viewTable;
 			this.repo=RestarauntBookingRepo.getInstance();
 		}
+		
 		public void getCustomer(int bookingId) {
 			Customer c=repo.getCustomer(bookingId);
 			if(c.getBookingId()==0) {
