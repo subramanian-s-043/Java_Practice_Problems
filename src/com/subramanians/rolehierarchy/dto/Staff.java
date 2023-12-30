@@ -2,14 +2,23 @@ package com.subramanians.rolehierarchy.dto;
 
 public class Staff {
 	private String name;
+	private String role;
 	private String reportingTo;
 	private int id;
 	
-	public Staff(String name,String reportingTo,int id)
+	public Staff(String role,String reportingTo,int id)
 	{
-		this.name=name;
+		this.role=role;
 		this.reportingTo=reportingTo;
 		this.id=id;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getName() {
