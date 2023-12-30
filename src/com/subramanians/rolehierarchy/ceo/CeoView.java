@@ -17,22 +17,26 @@ public class CeoView {
 		System.out.println("Operations: ");
 		while(run)
 		{
-			System.out.println("1. Add Sub Roles \n 0.Exit ");
+			System.out.println(" 1. Add Sub Roles \n 2.Display Roles \n 0.Exit ");
+			System.out.println("Operations to be Performed: ");
 			int choice=scanner.nextInt();
+			scanner.nextLine();
 			switch(choice)
 			{
 			case 1:
 				System.out.println("Enter the sub-Role name: ");
-				String subRole=scanner.next();
+				String subRole=scanner.nextLine();
 				System.out.println("Enter the Repoting to Role name: ");
 				String reportingTo;
 				do {
-					reportingTo=scanner.next();
+					reportingTo=scanner.nextLine();
 				}while(ceoViewModel.validateReportingTo(reportingTo));
 				ceoViewModel.setSubRole(subRole,reportingTo);
 				break;
-			case 0:
+			case 2:
 				ceoViewModel.showReportingStaffs();
+				break;
+			case 0:
 				run=false;
 				break;
 			}
@@ -46,6 +50,12 @@ public class CeoView {
 	}
 	
 	public void showMessage(String msg) {
-		System.out.println(msg);
+		if(msg.equals(""))
+		{
+			System.out.println();
+		}else
+		{
+			System.out.print(msg);			
+		}
 	}
 }

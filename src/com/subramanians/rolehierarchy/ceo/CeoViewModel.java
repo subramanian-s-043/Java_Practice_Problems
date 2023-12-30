@@ -43,11 +43,26 @@ public class CeoViewModel {
 
 	public boolean validateReportingTo(String report)
 	{
-		if(rootUser.getRole().equals(report))
+		if(reportingStaffs.isEmpty() || rootUser.getRole().equals(report))
 		{
-			return false;
+			if(rootUser.getRole().equals(report))
+			{
+				return false;
+			}else {
+				ceoView.showMessage("Enter Valid Reporting Authority");
+				return true;
+			}
+		}else {
+			for(Map.Entry<Integer, Staff> staff: reportingStaffs.entrySet())
+			{
+				if(staff.getValue().getRole().equals(report))
+				{
+					return false;
+				}
+			}
+			ceoView.showMessage("Enter Valid Reporting Authority");
+			return true;
 		}
-		return true;
 	}
 	
 	public void setSubRole(String subRole,String reportingTo) {
@@ -64,7 +79,8 @@ public class CeoViewModel {
 		ceoView.showMessage(rootUser.getRole());
 		for(Map.Entry<Integer, Staff> staff: reportingStaffs.entrySet())
 		{
-			ceoView.showMessage(staff.getValue().getRole());
+			ceoView.showMessage(","+staff.getValue().getRole());
 		}
+		ceoView.showMessage("");
 	}
 }
