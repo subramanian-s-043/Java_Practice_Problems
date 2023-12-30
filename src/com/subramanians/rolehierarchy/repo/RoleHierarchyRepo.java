@@ -91,18 +91,41 @@ public class RoleHierarchyRepo {
 		
 	}
 
-	public Map<Integer, Staff> getStaffs() {
-		Map<Integer,Staff> temp=new HashMap<>();
+	public HashMap<Integer, Staff> getStaffs() {
+		HashMap<Integer,Staff> temp=new HashMap<>();
 		try {
 			statement=connection.prepareStatement("Select * from staffs");
 			result=statement.executeQuery();
 			while(result.next())
 			{
-				temp.put(result.getInt("reporting_id"),new Staff(result.getString("role_name"),result.getString("reporting_to"),result.getInt("reporting_id")));
+				temp.put(temp.size()+1,new Staff(result.getString("role_name"),result.getString("reporting_to"),result.getInt("reporting_id")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return temp;
+	}
+
+	public void updateReporting(int id,String changedReport,String initial) {
+		try {
+			statement=connection.prepareStatement("Update staffs Set reporting_id=?,reporting_to=? where reporting_to=?");
+			statement.setInt(1, id);
+			statement.setString(2, changedReport);
+			statement.setString(3, initial);
+			int rows=statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		removeRole(initial);
+	}
+	public void removeRole(String initial)
+	{
+		try {
+			statement=connection.prepareStatement("Delete from staffs where role_name=?");
+			statement.setString(1, initial);
+			int rows=statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

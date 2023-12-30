@@ -1,6 +1,11 @@
 package com.subramanians.rolehierarchy.ceo;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.subramanians.rolehierarchy.dto.Root;
@@ -11,7 +16,7 @@ public class CeoViewModel {
 	CeoView ceoView;
 	RoleHierarchyRepo repo;
 	Root rootUser;
-	Map<Integer,Staff> reportingStaffs;
+	HashMap<Integer,Staff> reportingStaffs=new HashMap<>();
 	
 	public CeoViewModel(CeoView ceoView) {
 		this.ceoView=ceoView;
@@ -24,12 +29,7 @@ public class CeoViewModel {
 		{
 			ceoView.isCeo=true;
 			rootUser=new Root("CEO");
-			if(repo.getStaffs().isEmpty())
-			{
-				reportingStaffs=new HashMap<>();
-			}else {
-				reportingStaffs=repo.getStaffs();
-			}
+			reportingStaffs=repo.getStaffs();
 		}else {
 			ceoView.isCeo=false;
 		}
@@ -41,7 +41,7 @@ public class CeoViewModel {
 		{
 			rootUser=new Root(ceo);
 			ceoView.showMessage(ceo);
-			reportingStaffs=new HashMap<>();
+			reportingStaffs.put(1,new Staff(ceo,"",1));
 		}else {
 			ceoView.showMessage("Error In creating Ceo");
 		}
@@ -49,16 +49,6 @@ public class CeoViewModel {
 
 	public boolean validateReportingTo(String report)
 	{
-		if(reportingStaffs.isEmpty() || rootUser.getRole().equals(report))
-		{
-			if(rootUser.getRole().equals(report))
-			{
-				return false;
-			}else {
-				ceoView.showMessage("Enter Valid Reporting Authority");
-				return true;
-			}
-		}else {
 			for(Map.Entry<Integer, Staff> staff: reportingStaffs.entrySet())
 			{
 				if(staff.getValue().getRole().equals(report))
@@ -68,30 +58,76 @@ public class CeoViewModel {
 			}
 			ceoView.showMessage("Enter Valid Reporting Authority");
 			return true;
-		}
 	}
 	
 	public void setSubRole(String subRole,String reportingTo) {
 		Staff temp;
-		if(reportingStaffs.isEmpty())
+		int reporting_id=1;
+		for(Map.Entry<Integer, Staff> staff: reportingStaffs.entrySet())
 		{
-			temp=new Staff(subRole,reportingTo,1);
-			reportingStaffs.put(1, new Staff(subRole,reportingTo,1));
-			repo.addRole(temp);
-		}else {
-			temp=new Staff(subRole,reportingTo,reportingStaffs.size()+1);
-			reportingStaffs.put(reportingStaffs.size()+1, new Staff(subRole,reportingTo,reportingStaffs.size()+1));
-			repo.addRole(temp);
+			if(staff.getValue().getRole().equals(reportingTo))
+			{
+				reporting_id=staff.getKey();
+				break;
+			}
 		}
+		temp=new Staff(subRole,reportingTo,reporting_id);
+		reportingStaffs.put(reportingStaffs.size()+1, new Staff(subRole,reportingTo,reporting_id));
+		repo.addRole(temp);
 		
 	}
 
 	public void showReportingStaffs() {
-		ceoView.showMessage(rootUser.getRole());
+		reportingStaffs=sortByValue(reportingStaffs);
+		
 		for(Map.Entry<Integer, Staff> staff: reportingStaffs.entrySet())
 		{
-			ceoView.showMessage(","+staff.getValue().getRole());
+			ceoView.showMessage(staff.getValue().getRole()+",");
 		}
 		ceoView.showMessage("");
+	}
+
+    public static HashMap<Integer, Staff> sortByValue(HashMap<Integer, Staff> hm)
+    {
+        List<Map.Entry<Integer, Staff> > list =
+               new LinkedList<Map.Entry<Integer, Staff> >(hm.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Staff> >() {
+            public int compare(Map.Entry<Integer, Staff> o1, 
+                               Map.Entry<Integer, Staff> o2)
+            {
+                return ((Integer)o1.getValue().getId()).compareTo((Integer) o2.getValue().getId());
+            }
+        });
+        HashMap<Integer, Staff> temp = new LinkedHashMap<Integer, Staff>();
+        for (Map.Entry<Integer, Staff> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
+    }
+	
+	public void deleteRole(String role,String transfer) {
+		int replaceId=0;
+		String reporting_to="";
+		int id=0;
+		for(Map.Entry<Integer, Staff> staff: reportingStaffs.entrySet())
+		{
+			if(staff.getValue().getRole().equals(role))
+			{
+				id=staff.getKey();
+			}else if(staff.getValue().getRole().equals(transfer))
+			{
+				replaceId=staff.getKey();
+				reporting_to=staff.getValue().getRole();
+			}
+		}
+		for(Map.Entry<Integer, Staff> staff: reportingStaffs.entrySet())
+		{
+			if(staff.getValue().getId()==id)
+			{
+				staff.getValue().setId(replaceId);
+			}
+		}
+		repo.updateReporting(id,reporting_to,role);
+		reportingStaffs.remove(id);
 	}
 }

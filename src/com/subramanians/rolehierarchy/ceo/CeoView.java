@@ -17,7 +17,7 @@ public class CeoView {
 		System.out.println("Operations: ");
 		while(run)
 		{
-			System.out.println(" 1. Add Sub Roles \n 2.Display Roles \n 0.Exit ");
+			System.out.println(" 1. Add Sub Roles \n 2.Display Roles \n 3.Delete Role \n 0.Exit ");
 			System.out.println("Operations to be Performed: ");
 			int choice=scanner.nextInt();
 			scanner.nextLine();
@@ -36,11 +36,24 @@ public class CeoView {
 			case 2:
 				ceoViewModel.showReportingStaffs();
 				break;
+			case 3:
+				getRole();
+				break;
 			case 0:
 				run=false;
 				break;
 			}
 		}
+	}
+
+	private void getRole() {
+		Scanner scanner=new Scanner(System.in);
+		System.out.println("Enter the Role to Delete: ");
+		String role=scanner.nextLine();
+		System.out.println("Enter the Role to be Transferred");
+		String transfer=scanner.nextLine();
+		ceoViewModel.deleteRole(role,transfer);
+		
 	}
 
 	public void getCeo() {
