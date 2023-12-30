@@ -12,6 +12,7 @@ public class CeoViewModel {
 	RoleHierarchyRepo repo;
 	Root rootUser;
 	Map<Integer,Staff> reportingStaffs;
+	
 	public CeoViewModel(CeoView ceoView) {
 		this.ceoView=ceoView;
 		this.repo=RoleHierarchyRepo.getInstance();
@@ -23,7 +24,12 @@ public class CeoViewModel {
 		{
 			ceoView.isCeo=true;
 			rootUser=new Root("CEO");
-			reportingStaffs=new HashMap<>();
+			if(repo.getStaffs().isEmpty())
+			{
+				reportingStaffs=new HashMap<>();
+			}else {
+				reportingStaffs=repo.getStaffs();
+			}
 		}else {
 			ceoView.isCeo=false;
 		}
@@ -66,11 +72,16 @@ public class CeoViewModel {
 	}
 	
 	public void setSubRole(String subRole,String reportingTo) {
+		Staff temp;
 		if(reportingStaffs.isEmpty())
 		{
+			temp=new Staff(subRole,reportingTo,1);
 			reportingStaffs.put(1, new Staff(subRole,reportingTo,1));
+			repo.addRole(temp);
 		}else {
+			temp=new Staff(subRole,reportingTo,reportingStaffs.size()+1);
 			reportingStaffs.put(reportingStaffs.size()+1, new Staff(subRole,reportingTo,reportingStaffs.size()+1));
+			repo.addRole(temp);
 		}
 		
 	}

@@ -5,6 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.subramanians.rolehierarchy.dto.Staff;
 
 public class RoleHierarchyRepo {
 	static RoleHierarchyRepo repo;
@@ -72,5 +76,33 @@ public class RoleHierarchyRepo {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public void addRole(Staff temp) {
+		try {
+			statement=connection.prepareStatement("Insert into staffs(role_name,reporting_to,reporting_id) values (?,?,?)");
+			statement.setString(1, temp.getRole());
+			statement.setString(2, temp.getReportingTo());
+			statement.setInt(3, temp.getId());
+			int rows=statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	public Map<Integer, Staff> getStaffs() {
+		Map<Integer,Staff> temp=new HashMap<>();
+		try {
+			statement=connection.prepareStatement("Select * from staffs");
+			result=statement.executeQuery();
+			while(result.next())
+			{
+				temp.put(result.getInt("reporting_id"),new Staff(result.getString("role_name"),result.getString("reporting_to"),result.getInt("reporting_id")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return temp;
 	}
 }
