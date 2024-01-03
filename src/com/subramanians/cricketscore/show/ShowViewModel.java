@@ -13,11 +13,9 @@ import com.subramanians.cricketscore.repo.CricketRepo;
 public class ShowViewModel {
 	ShowView showView;
 	CricketRepo repo;
-	Team teamA;
-	Team teamB;
+	Team teamA,teamB,tossWon;
 	Formats chosenForamt;
 	Match current;
-	Team tossWon;
 	List<Team> teams=new ArrayList<>();
 	List<Formats> formats=new ArrayList<>();
 	List<Match> allMatches=new ArrayList<>();
@@ -28,11 +26,8 @@ public class ShowViewModel {
 	String[][] matchBowlers=new String[5][3];
 	String[][] matchBatters=new String[11][2];
 	String[] strikers=new String[2];
-	String currentBowler;
-	String currentBatter;
-	int striker=0, nonStriker=0,over=0, wicket=0, runs=0, extras=0, currentBall=0;
-	int matchTarget=0;
-	int balls=6;
+	String lastBowled,currentBowler,currentBatter;
+	int striker=0, nonStriker=0,over=0, wicket=0, runs=0, extras=0, currentBall=0, matchTarget=0, balls=6;
 	byte innigs=1;
 	
 	public ShowViewModel(ShowView showView) {
@@ -41,7 +36,7 @@ public class ShowViewModel {
 	}
 
 	public void getTeams() {
-		teams=repo.getAvailableTeams();
+		teams=repo.getAvailableTeams();   //Manage Space
 		allMatches=repo.getAllMatches();
 	}
 
@@ -62,7 +57,6 @@ public class ShowViewModel {
 			matchId=allMatches.size()+1;
 		}
 		current=new Match(matchId,chosenForamt.getOvers(),teamA,teamB,chosenForamt.getFormatName());
-		allMatches.add(current);
 		repo.newMatch(current);
 	}
 
@@ -181,7 +175,7 @@ public class ShowViewModel {
 			strikers[1]=matchBatters[1][0];
 			nonStriker=Integer.valueOf(matchBatters[1][2]);
 			indivualScore.put(nonStriker, 0);
-		}else if(strikers[0]==""){
+		}else if(strikers[0].equals("")){
 			strikers[0]=matchBatters[wicket+1][0];
 			currentBatter=strikers[0];
 			striker=Integer.valueOf(matchBatters[wicket+1][2]);
@@ -209,7 +203,7 @@ public class ShowViewModel {
 
 
 	public boolean validateBowler(String option) {
-		if(currentBowler.contains(option)) {
+		if(lastBowled.contains(option)) {
 			showView.showError("Bowler Bowled Last Over");
 			return true;
 		}else {
@@ -218,13 +212,31 @@ public class ShowViewModel {
 	}
 
 	public void startOver() {
-		showView.overStart(currentBowler,currentBatter,strikers[1],over,runs,wicket,extras);
 		do {
 			showView.getScore(currentBall,over);
-			showView.printRun(over,runs,wicket,extras,currentBatter,strikers[1],striker,nonStriker,indivualScore);
+			if(currentBall!=6)
+			{
+				showView.printRun(over,currentBall,runs,wicket,extras,currentBatter,strikers[1],striker,nonStriker,indivualScore);	
+			}
 		}while(currentBall<balls);
-		showView.overStart(currentBowler,currentBatter,strikers[1],over,runs,wicket,extras);
+		if(innigs==2 && over==chosenForamt.getOvers())
+		{
+			return;
+		}else {
+			showView.overStart(currentBowler,currentBatter,strikers[1],over,runs,wicket,extras);	
+		}
 		currentBall=0;
+	}
+	
+	public boolean validateScore(String run) {
+		if(run.equals("W") || run.equals("WD") || run.equals("NB")) {
+			return false;
+		}else if(run.equals("5") || Integer.valueOf(run)>6) {
+			showView.showError("Enter Valid Score");
+			return true;
+		}else {
+			return false;
+		}
 	}
 	
 	public void addScore(String run,int incomingBall,int incomingOver) {
@@ -241,6 +253,18 @@ public class ShowViewModel {
 				wicket++;
 				runByBall.put(incomingBall, -1);
 				current.getCurrBat().setIndivualScore(striker,indivualScore.get(striker));
+				if(wicket>=10) {
+					if(innigs==2) {
+						currentBall=6;
+						over=chosenForamt.getOvers();
+						current.getCurrBat().setIndivualScore(striker,indivualScore.get(striker));
+						current.getCurrBat().setIndivualScore(nonStriker,indivualScore.get(nonStriker));
+						showView.printSummary();
+						return;
+					}else {
+						changeInginngs();
+					}
+				}
 				if(strikers[0].equals(currentBatter))
 				{
 					strikers[0]="";
@@ -254,6 +278,15 @@ public class ShowViewModel {
 		}else {
 			int temprun=Integer.valueOf(run);
 			runs+=temprun;
+			if(innigs==2 && runs>=matchTarget)
+			{
+				currentBall=6;
+				over=chosenForamt.getOvers();
+				current.getCurrBat().setIndivualScore(striker,indivualScore.get(striker)+temprun);
+				current.getCurrBat().setIndivualScore(nonStriker,indivualScore.get(nonStriker));
+				showView.printSummary();
+				return;
+			}
 			if(indivualScore.containsKey(striker)) {
 				indivualScore.put(striker, indivualScore.get(striker)+temprun);	
 			}else {
@@ -266,6 +299,7 @@ public class ShowViewModel {
 					String temp=currentBatter;
 					currentBatter=strikers[1];
 					strikers[1]=temp;
+					strikers[0]=currentBatter;
 					int temp1=striker;
 					striker=nonStriker;
 					nonStriker=temp1;
@@ -273,6 +307,7 @@ public class ShowViewModel {
 					String temp=currentBatter;
 					currentBatter=strikers[0];
 					strikers[1]=temp;
+					strikers[0]=currentBatter;
 				}
 			}
 			currentBall++;
@@ -291,6 +326,7 @@ public class ShowViewModel {
 				String temp=currentBatter;
 				currentBatter=strikers[1];
 				strikers[1]=temp;
+				strikers[0]=currentBatter;
 				int temp1=striker;
 				striker=nonStriker;
 				nonStriker=temp1;
@@ -302,53 +338,81 @@ public class ShowViewModel {
 				striker=nonStriker;
 				nonStriker=temp1;
 			}
+			lastBowled=currentBowler;
+			currentBowler="-";
 			over++;
 			if(over==chosenForamt.getOvers() && innigs==1){
-				//Handle change of innings
-				if(current.getTeamA().equals(current.getCurrBat())) {
-					current.setTeamAScore(runs);
-					current.setTeamAWickets(wicket);
-				}else {
-					current.setTeamBScore(runs);
-					current.setTeamBWickets(wicket);
-				}
-				matchTarget=runs+1;
-				showView.printInnings(matchTarget,wicket,current);
-				innigs=2;
-				runs=0;
-				wicket=0;
-				over=0;
-				Team temp=current.getCurrBat();
-				current.setCurrBat(current.getCurrField());
-				current.setCurrField(temp);
-				setBattersAndBowlers();
-				setStrikers();
-				showTimer();
-				return;
+				changeInginngs();
 			}else if(over==chosenForamt.getOvers() && innigs==2) {
-				//complete the match by summary
-				if(current.getTeamA().equals(current.getCurrField())) {
-					current.setTeamBScore(runs);
-					if(current.getTeamBScore()>current.getTeamAScore()) {
-						current.setWon(current.getTeamB());
-					}else {
-						current.setWon(current.getTeamA());
-					}
-				}else {
-					current.setTeamAScore(runs);
-					if(current.getTeamAScore()>current.getTeamBScore()) {
-						current.setWon(current.getTeamA());
-					}else {
-						current.setWon(current.getTeamB());
-					}
-				}
-				showView.printWon(current);
+				current.getCurrBat().setIndivualScore(striker,indivualScore.get(striker));
+				current.getCurrBat().setIndivualScore(nonStriker,indivualScore.get(nonStriker));
+				showView.printSummary();
 			}
 		}
 	}
-
+	
+	public void changeInginngs() {
+		if(current.getTeamA().equals(current.getCurrBat())) {
+			current.setTeamAScore(runs);
+			current.setTeamAWickets(wicket);
+		}else {
+			current.setTeamBScore(runs);
+			current.setTeamBWickets(wicket);
+		}
+		current.getCurrBat().setIndivualScore(striker,indivualScore.get(striker));
+		current.getCurrBat().setIndivualScore(nonStriker,indivualScore.get(nonStriker));
+		matchTarget=runs+1;
+		showView.printInnings(matchTarget,wicket,current);
+		innigs=2;
+		runs=0;
+		wicket=0;
+		over=0;
+		Team temp=current.getCurrBat();
+		current.setCurrBat(current.getCurrField());
+		current.setCurrField(temp);
+		setBattersAndBowlers();
+		setStrikers();
+//		showTimer();
+		return;
+	}
+	
+	public void printWin() {
+		if(current.getWon()!=null)
+		{
+			showView.printWon(current);
+			return;
+		}
+		if(current.getTeamA().equals(current.getCurrField())) {
+			current.setTeamBScore(runs);
+			if(current.getTeamBScore()>current.getTeamAScore()) {
+				current.setWon(current.getTeamB());
+			}else {
+				current.setWon(current.getTeamA());
+			}
+		}else {
+			current.setTeamAScore(runs);
+			if(current.getTeamAScore()>current.getTeamBScore()) {
+				current.setWon(current.getTeamA());
+			}else {
+				current.setWon(current.getTeamB());
+			}
+		}
+		showView.printWon(current);
+	}
+	
 	public int getcurrentOver() {
 		return over;
+	}
+
+	public void updateRepo() {
+		current.setEachOver(eachOver);
+		allMatches.add(current);
+		// Logic For Saving to DB
+	}
+
+	public void getMatch(int option) {
+		current=allMatches.get(option-1);
+		showView.printSummary();
 	}
 	
 }

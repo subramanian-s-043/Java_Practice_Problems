@@ -137,15 +137,15 @@ public class CricketRepo {
 
 	public void newMatch(Match match) {
 		matches.add(match);
-		try {
-			statement=connection.prepareStatement("Insert into matches (matchNo,teamA,teamB,format) values(?,?,?,?)");
-			statement.setInt(1, match.getMatchId());
-			statement.setString(2, match.getTeamA().getTeam());
-			statement.setString(3, match.getTeamB().getTeam());
-			statement.setString(4, match.getFormat());
-			int rowsAffected=statement.executeUpdate();
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			statement=connection.prepareStatement("Insert into matches (matchNo,teamA,teamB,format) values(?,?,?,?)");
+//			statement.setInt(1, match.getMatchId());
+//			statement.setString(2, match.getTeamA().getTeam());
+//			statement.setString(3, match.getTeamB().getTeam());
+//			statement.setString(4, match.getFormat());
+//			int rowsAffected=statement.executeUpdate();
+//		}catch(SQLException e) {
+//			e.printStackTrace();
+//		}
 	}
 }

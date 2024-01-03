@@ -31,8 +31,9 @@ public class ShowView {
 		getToss(showViewModel.current); 
 		getTeamChoice(showViewModel.tossWon); 
 		showBatAndFiled(showViewModel.current); 
-		showViewModel.showTimer(); 
+//		showViewModel.showTimer(); 
 		startFirstInnings();
+		showViewModel.updateRepo();
 	}
 	
 	public void printTeams(List<Team> available) {
@@ -106,10 +107,10 @@ public class ShowView {
 		    System.out.println("+---------------------------------------------------+");
 		    System.out.printf("| %-45s |\n", team + " Players");
 		    System.out.println("+---------------------------------------------------+");
-		    System.out.printf("| %-19s | %-15s | %-15s |\n", "Player Name", "Player Role", "In At");
+		    System.out.printf("| %-21s | %-21s | %-15s |\n", "Player Name", "Player Role", "In At");
 		    System.out.println("+---------------------------------------------------+");
 		    for (int i = 0; i < 11; i++) {
-		        System.out.printf("| %-17s | %-17s | %-12s |\n", players[i][0], players[i][1], players[i][2]);
+		        System.out.printf("| %-21s | %-21s | %-12s |\n", players[i][0], players[i][1], players[i][2]);
 		    }
 
 		    System.out.println("+---------------------------------------------------+");
@@ -133,7 +134,7 @@ public class ShowView {
 		Scanner scanner=new Scanner(System.in);
 		String option;
 		System.out.println("Enter Bowler First Name: ");
-		if(showViewModel.currentBowler==null) {
+		if(showViewModel.over==0) {
 			option=scanner.next();
 			showViewModel.setBowler(option);
 		}else {
@@ -147,7 +148,7 @@ public class ShowView {
 	public void printBowlers(String[][] players,String current) {
 		int option=1;
 	    System.out.println("+---------------------------------------------------+");
-	    System.out.printf("| %-15s | %-12s |\n", "Player Name", "Overs-Left");
+	    System.out.printf("| %-17s | %-12s |\n", "Player Name", "Overs-Left");
 	    System.out.println("+---------------------------------------------------+");
 	    for (int i = 0; i < players.length; i++) {
 	    	if(current!="" && players[i][0].equals(current))
@@ -162,37 +163,41 @@ public class ShowView {
 
 	public void overStart(String currentBowler, String currentBatter, String nonStriker, int over,int runs,int wickets,int extras) {
 		System.out.println("+--------------------------------------------+");
-	    System.out.println("|                Cricket Scoreboard           |");
-	    System.out.println("+--------------------------------------------+");
-	    System.out.println("| Last Bowled   | Current Batter | Non-Striker |");
-	    System.out.println("+--------------------------------------------+");
-	    System.out.printf("| %-17s | %-15s | %-11s |\n", currentBowler, currentBatter, nonStriker);
-	    System.out.println("+--------------------------------------------+");
-	    System.out.printf("| Overs: %d                                     |\n", over);
-	    System.out.println("+--------------------------------------------+");
-	    System.out.println("|  Runs  |  Wickets  |  Extras  |  Total  |");
-	    System.out.println("+--------------------------------------------+");
-	    System.out.printf("|   %d    |    %d      |    %d     |    %d    |\n",runs,wickets,extras,runs);
-	    System.out.println("+--------------------------------------------+");
+		System.out.println("|                Cricket Scoreboard           |");
+		System.out.println("+--------------------------------------------+");
+		System.out.println("| Last Bowled       | Current Batter | Non-Striker |");
+		System.out.println("+--------------------------------------------+");
+		System.out.printf("| %-17s | %-15s | %-11s |\n", currentBowler, currentBatter, nonStriker);
+		System.out.println("+--------------------------------------------+");
+		System.out.printf("| Overs: %d                                  |\n", over-1);
+		System.out.println("+--------------------------------------------+");
+		System.out.println("|  Runs  |  Wickets  |  Extras  |  Total  |");
+		System.out.println("+--------------------------------------------+");
+		System.out.printf("|   %d    |    %d      |    %d     |    %d    |\n", runs, wickets, extras, runs);
+		System.out.println("+--------------------------------------------+");
+
 	}
 
-	public void printRun(int over, int runs, int wicket, int extras, String currentBatter, String strikers, int striker, int nonStriker, Map<Integer, Integer> indivualScore) {
-        System.out.println("+------------------------------------------------------------+");
-        System.out.println("|                          Scorecard                         |");
-        System.out.println("+------------------------------------------------------------+");
-        System.out.printf(" | Overs: %-2d | Runs: %-3d | Wickets: %-2d | Extras: %-3d |%n", over, runs, wicket, extras);
-        System.out.println("+---------------------+----------------------+------------------+");
+	public void printRun(int over,int ball, int runs, int wicket, int extras, String currentBatter, String strikers, int striker, int nonStriker, Map<Integer, Integer> indivualScore) {
+        System.out.println("+-----------------------------------------------------------------------------------------------------+");
+        System.out.println("|                      Scorecard                                                                      |");
+        System.out.println("+-----------------------------------------------------------------------------------------------------+");
+        System.out.printf(" | Overs: %-2s | Runs: %-3d | Wickets: %-2d | Extras: %-3d |%n", over+"."+ball, runs, wicket, extras);
+        System.out.println("+---------------------+----------------------+--------------------------------------------------------+");
         System.out.printf(" | Current Batter      | Striker (%s)         | Non-Striker (%s) |%n", currentBatter, strikers);
-        System.out.println("+---------------------+----------------------+------------------+");
+        System.out.println("+---------------------+----------------------+--------------------------------------------------------+");
         System.out.printf("| %-20s | %-20d | %-14d |%n", "Individual Scores",indivualScore.get(striker), indivualScore.get(nonStriker));
-        System.out.println("+------------------------------------------------------------+");	
+        System.out.println("+------------------------------------------------------------------------------------------------------+");	
 	}
 	
 	public void getScore(int balls,int over) {
 		Scanner scanner=new Scanner(System.in);
+		String run;
 		System.out.println("(If It is Wide, No-ball or Wicket give WD-->wide , NB-->No ball & W--> Wicket)");
 		System.out.println("Enter "+over+"."+balls+" run: ");
-		String run=scanner.next();
+		do {
+			run=scanner.next();
+		}while(showViewModel.validateScore(run));
 		showViewModel.addScore(run,balls,over);
 	}
 	
@@ -211,8 +216,49 @@ public class ShowView {
 		
 	}
 
+	public void printSummary() {
+		System.out.println("+-----------------------------------------------------+");
+		System.out.println("\t "+ showViewModel.current.getTeamA().getTeam()+" Score-Card \t");
+		System.out.println("+-----------------------------------------------------+");
+		String[][] teamMembers=showViewModel.current.getTeamA().getTeamMembers();
+	    System.out.printf("| %-19s | %-15s |\n", "Player Name", "Scored");
+	    System.out.println("+---------------------------------------------------+");
+	    for (int i = 0; i < 11; i++) {
+	    	if(showViewModel.teamA.getIndivualScore().containsKey(Integer.valueOf(teamMembers[i][2])))
+	    	{
+	    		System.out.printf("| %-19s | %-17s |\n", teamMembers[i][0], showViewModel.current.getTeamA().getIndivualScore().get(Integer.valueOf(teamMembers[i][2])));
+	    	}else {
+	    		System.out.printf("| %-19s | %-17s |\n", teamMembers[i][0], "Not Batted");
+	    	}
+	    }
+	    System.out.println("+---------------------------------------------------+");
+		System.out.println("\t "+ showViewModel.current.getTeamB().getTeam()+" Score-Card \t");
+		System.out.println("+-----------------------------------------------------+");
+		teamMembers=showViewModel.current.getTeamB().getTeamMembers();
+	    System.out.printf("| %-19s | %-15s |\n", "Player Name", "Scored");
+	    System.out.println("+---------------------------------------------------+");
+	    for (int i = 0; i < 11; i++) {
+	    	if(showViewModel.teamB.getIndivualScore().containsKey(Integer.valueOf(teamMembers[i][2])))
+	    	{
+	    		System.out.printf("| %-19s | %-17s |\n", teamMembers[i][0], showViewModel.current.getTeamB().getIndivualScore().get(Integer.valueOf(teamMembers[i][2])));
+	    	}else {
+	    		System.out.printf("| %-19s | %-17s |\n", teamMembers[i][0], "Not Batted");
+	    	}
+	    }
+	    System.out.println("+---------------------------------------------------+");
+	    showViewModel.printWin();
+	}
+	
 	public void showError(String msg) {
 		System.out.println(msg);
+	}
+
+	public void getMatchno() {
+		Scanner scanner=new Scanner(System.in);
+		System.out.println("Enter the Match-No: ");
+		int option=scanner.nextInt();
+		showViewModel.getMatch(option);
+		
 	}
 	
 }

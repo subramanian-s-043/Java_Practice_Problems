@@ -1,5 +1,7 @@
 package com.subramanians.cricketscore.dto;
 
+import java.util.List;
+
 public class Match {
 	int matchId;
 	int over;
@@ -11,6 +13,7 @@ public class Match {
 	int teamAWickets;
 	int teamBWickets;
 	Team won;
+	List<Over> eachOver;
 	String description;
 	Team tossWon;
 	String teamChoice;
@@ -24,6 +27,12 @@ public class Match {
 		this.teamA=teamA;
 		this.teamB=teamB;
 		this.format=format;
+	}
+	public List<Over> getEachOver() {
+		return eachOver;
+	}
+	public void setEachOver(List<Over> eachOver) {
+		this.eachOver = eachOver;
 	}
 	public String getTeamChoice() {
 		return teamChoice;
