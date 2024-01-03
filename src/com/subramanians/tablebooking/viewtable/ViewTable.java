@@ -3,7 +3,7 @@ package com.subramanians.tablebooking.viewtable;
 import java.util.Scanner;
 
 import com.subramanians.tablebooking.Utility;
-import com.subramanians.tablebooking.dto.Customer;
+import com.subramanians.tablebooking.dto.Booking;
 
 public class ViewTable {
 	ViewTableViewModel viewTableviewmodel;
@@ -13,12 +13,12 @@ public class ViewTable {
 	}
 	
 	public void getInput() {
-		Scanner scanner=new Scanner(System.in);
-		System.out.println("Enter the Booking Id: ");
-		int input=scanner.nextInt();
-		viewTableviewmodel.getCustomer(input);
+//		Scanner scanner=new Scanner(System.in);
+//		System.out.println("Enter the Booking Id: ");
+//		int input=scanner.nextInt();
+		viewTableviewmodel.getCustomer();
 	}
-	public void printSuccess(Customer c) {
+	public void printSuccess(Booking c) {
 		System.out.println("====================================");
 		System.out.println("Booking Id: "+Utility.BLUE+c.getBookingId()+Utility.RESET);
 		System.out.println("Booked Restaurant: "+Utility.BLUE+c.getbookedRestaurant()+Utility.RESET);

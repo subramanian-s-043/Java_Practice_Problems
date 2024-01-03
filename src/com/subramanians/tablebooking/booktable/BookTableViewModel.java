@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.subramanians.tablebooking.dto.Customer;
+import com.subramanians.tablebooking.dto.Booking;
 import com.subramanians.tablebooking.dto.Table;
 import com.subramanians.tablebooking.repository.RestarauntBookingRepo;
 
@@ -35,28 +35,50 @@ class BookTableViewModel {
 		return dates;
 	}
 	
+	public boolean isBreakfastTime(LocalTime t)
+	{
+		if(t.isAfter(LocalTime.of(8, 0)) && t.isBefore(LocalTime.of(11, 0)))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isLunchTime(LocalTime t)
+	{
+		if(t.isAfter(LocalTime.of(11, 30)) && t.isBefore(LocalTime.of(16, 0)))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isDinnerTime(LocalTime t)
+	{
+		if(t.isAfter(LocalTime.of(18, 30)) && t.isBefore(LocalTime.of(22, 0)))
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	//Store View Model
 	public void retrieveRestaurant(int option) {
 		currentlyChosen=dates.get(option-1);
-		retrieved=repo.retrieveResutarant(currentlyChosen);
+		retrieved=repo.retrieveResutarant();
 		bookTableView.printResutaurants(retrieved);
 	}
 	
 	//Book Table
 	public void book(String name,int numberOfpeople) {
-		int availability=repo.getAvailability(restaurantChosen, currentlyChosen);
-		if(availability >=1)
-		{
+//		int availability=repo.getAvailability(restaurantChosen, currentlyChosen);
 			int bookingId=repo.getBookingId();
 			if(bookingId>1)
 			{
 				bookingId++;
 			}
-			repo.book(new Customer(bookingId, name, restaurantChosen, numberOfpeople, currentlyChosen, currentlyChosenTime));
-			bookTableView.printSuccess(repo.getCustomer(bookingId));
-		}else {
-			bookTableView.showError("Sorry Booking Not Yet Opened!, Please Contact Restaurant.");
-		}
+			repo.book(new Booking(bookingId, name, restaurantChosen, numberOfpeople, currentlyChosen, currentlyChosenTime));
+			bookTableView.printSuccess(repo.getBooking(bookingId));
 	}
 	
 	public void setTime(int option) {
@@ -116,5 +138,10 @@ class BookTableViewModel {
 			availableTime.remove(t);
 		}
 		bookTableView.printAvailableTime(availableTime);
+	}
+
+
+	public String getName() {
+		return repo.getCurrentCustomer().getName();
 	}
 }

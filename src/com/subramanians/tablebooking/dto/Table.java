@@ -4,11 +4,20 @@ public class Table {
 	private String restaurantName;
 	private int totalNumberOfTable;
 	private int tableCapacity;
-	public Table(String restaurantName,int totalNumberOfTable,int tableCapacity)
+	private Boolean isAvailable;
+	
+	public Table(String restaurantName,int totalNumberOfTable,int tableCapacity,boolean available)
 	{
 		setRestaurantName(restaurantName);
 		setTotalNumberOfTable(totalNumberOfTable);
 		setTableCapacity(tableCapacity);
+		setIsAvailable(available);
+	}
+	public Boolean getIsAvailable() {
+		return isAvailable;
+	}
+	public void setIsAvailable(Boolean isAvailable) {
+		this.isAvailable = isAvailable;
 	}
 	public String getRestaurantName() {
 		return restaurantName;

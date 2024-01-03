@@ -2,11 +2,11 @@ package com.subramanians.rolehierarchy.login;
 
 import java.util.Scanner;
 
-import com.subramanians.rolehierarchy.ceo.CeoView;
+import com.subramanians.rolehierarchy.ceo.RoleView;
 
 public class LoginView {
 	LoginViewModel loginViewModel;
-	CeoView app=new CeoView();
+	RoleView app=new RoleView();
 	
 	public LoginView() {
 		loginViewModel=new LoginViewModel(this);

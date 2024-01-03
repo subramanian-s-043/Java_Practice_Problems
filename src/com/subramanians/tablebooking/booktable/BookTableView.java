@@ -5,8 +5,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
 
+import com.subramanians.cricketscore.show.ShowViewModel;
 import com.subramanians.tablebooking.Utility;
-import com.subramanians.tablebooking.dto.Customer;
+import com.subramanians.tablebooking.dto.Booking;
 import com.subramanians.tablebooking.dto.Table;
 
 public class BookTableView {
@@ -25,17 +26,28 @@ public class BookTableView {
 		System.out.println("Choose the date to see the available Restaurants: ");
 		int option=scanner.nextInt();
 		bookTableViewModel.retrieveRestaurant(option);
-		System.out.println("Choose the Restaurant to Book: ");
+		System.out.println("Choose the Restaurant to Book: \nPress 0 to Go Back....");
 		option=scanner.nextInt();
+		if(option==0)
+		{
+			return;
+		}
 		bookTableViewModel.retrieveAvailability(option);
 		System.out.println("Choose The Time you want to Book: ");
 		option=scanner.nextInt();
 		bookTableViewModel.setTime(option);
-		System.out.println("Enter the Name: ");
+		System.out.println(" 1.Self-Booking \n 2.Booking for others: ");
+		option=scanner.nextInt();
 		String name;
-		do {
-			name=scanner.next();
-		}while(!bookTableViewModel.validateName(name));
+		if(option==1)
+		{
+			name=bookTableViewModel.getName();
+		}else
+		{
+			do {
+				name=scanner.next();
+			}while(!bookTableViewModel.validateName(name));	
+		}
 		System.out.println("Number Of People(Max 4 people per booking): ");
 		int numberOfPeople;
 		do {
@@ -74,28 +86,28 @@ public class BookTableView {
 		System.out.println(Utility.GREEN+"Available Timings: "+Utility.RESET);
 		System.out.println(Utility.YELLOW+"Break-Fast"+Utility.RESET);
 		for(LocalTime t:availableTime) {
-			if(t.isAfter(LocalTime.of(8, 0)) && t.isBefore(LocalTime.of(11, 0)))
+			if(bookTableViewModel.isBreakfastTime(t))
 				System.out.println((option++)+"->"+t);
 		}
 		option+=2;
 		System.out.println(Utility.ROSECOLOR+"==================================================="+Utility.RESET);
 		System.out.println(Utility.YELLOW+"Lunch"+Utility.RESET);
 		for(LocalTime t:availableTime) {
-			if(t.isAfter(LocalTime.of(11, 30)) && t.isBefore(LocalTime.of(16, 0)))
+			if(bookTableViewModel.isLunchTime(t))
 			System.out.println((option++)+"->"+t);
 		}
 		option+=6;
 		System.out.println(Utility.ROSECOLOR+"==================================================="+Utility.RESET);
 		System.out.println(Utility.YELLOW+"Dinner"+Utility.RESET);
 		for(LocalTime t:availableTime) {
-			if(t.isAfter(LocalTime.of(18, 30)) && t.isBefore(LocalTime.of(22, 0)))
+			if(bookTableViewModel.isDinnerTime(t))
 			System.out.println((option++)+"->"+t);
 		}
 	}
 	
 	//Print Booking Success
 	
-	public void printSuccess(Customer c) {
+	public void printSuccess(Booking c) {
 		System.out.println("====================================");
 		System.out.println("Booking Id: "+Utility.ORANGE+c.getBookingId()+Utility.RESET);
 		System.out.println("Booked Restaurant: "+Utility.ORANGE+c.getbookedRestaurant()+Utility.RESET);

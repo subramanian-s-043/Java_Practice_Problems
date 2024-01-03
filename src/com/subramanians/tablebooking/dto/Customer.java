@@ -1,61 +1,56 @@
 package com.subramanians.tablebooking.dto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
 
 public class Customer {
-	private int bookingId;
-	private String customerName;
-	private String bookedRestaurant;
-	private int numberOfPeoples;
-	private LocalDate date;
-	private LocalTime time;
-	public Customer() {
-		
+	private int id;
+	private String name;
+	private String username;
+	private String password;
+	private List<Booking> bookingHistory;
+	
+	public Customer(int id,String name,String username,String password,List<Booking> history)
+	{
+		this.id=id;
+		this.name=name;
+		this.username=username;
+		this.password=password;
+		this.bookingHistory=history;
 	}
-	public Customer(int bookingId,String customerName,String bookedRestaurant,int numberOfPeoples,LocalDate date,LocalTime time) {
-		this.bookingId=bookingId;
-		this.customerName=customerName;
-		this.numberOfPeoples=numberOfPeoples;
-		this.bookedRestaurant=bookedRestaurant;
-		this.date=date;
-		this.time=time;
+	
+	public int getId() {
+		return id;
 	}
-	public LocalDate getDate() {
-		return date;
+
+	public void setId(int id) {
+		this.id = id;
 	}
-	public void setDate(LocalDate date) {
-		this.date = date;
+
+	public String getPassword() {
+		return password;
 	}
-	public int getBookingId() {
-		return bookingId;
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
-	public void setBookingId(int bookingId) {
-		this.bookingId = bookingId;
+
+	public String getName() {
+		return name;
 	}
-	public String getCustomerName() {
-		return customerName;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
+	public String getUsername() {
+		return username;
 	}
-	public String getbookedRestaurant() {
-		return bookedRestaurant;
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	public void setbookedRestaurant(String bookedRestaurant) {
-		this.bookedRestaurant = bookedRestaurant;
+	public List<Booking> getBookingHistory() {
+		return bookingHistory;
 	}
-	public LocalTime getTime() {
-		return time;
-	}
-	public void setTime(LocalTime time) {
-		this.time = time;
-	}
-	public int getnumberOfPeoples() {
-		return numberOfPeoples;
-	}
-	public void setnumberOfPeoples(int numberOfPeoples) {
-		this.numberOfPeoples = numberOfPeoples;
+	public void setBookingHistory(List<Booking> bookingHistory) {
+		this.bookingHistory = bookingHistory;
 	}
 	
 }

@@ -1,6 +1,8 @@
 package com.subramanians.tablebooking.viewtable;
 
-import com.subramanians.tablebooking.dto.Customer;
+import java.util.List;
+
+import com.subramanians.tablebooking.dto.Booking;
 import com.subramanians.tablebooking.repository.RestarauntBookingRepo;
 
 public class ViewTableViewModel {
@@ -12,14 +14,11 @@ public class ViewTableViewModel {
 			this.repo=RestarauntBookingRepo.getInstance();
 		}
 		
-		public void getCustomer(int bookingId) {
-			Customer c=repo.getCustomer(bookingId);
-			if(c.getBookingId()==0) {
-				viewTable.showError("Invalid Booking Id");
-			}else if(c.getBookingId()!=bookingId) {
-				viewTable.showError("Enter Valid Booking Id");
-			}else {
-				viewTable.printSuccess(c);
+		public void getCustomer() {
+			List<Booking> temp=repo.getCurrentCustomer().getBookingHistory();
+			for(int i=0;i<temp.size();i++)
+			{
+				viewTable.printSuccess(temp.get(i));	
 			}
 		}
 }

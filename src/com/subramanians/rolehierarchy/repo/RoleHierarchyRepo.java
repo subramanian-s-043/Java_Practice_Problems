@@ -128,4 +128,16 @@ public class RoleHierarchyRepo {
 			e.printStackTrace();
 		}
 	}
+
+	public void addStaff(int staff_id,String username, String role, int role_id) {
+		try {
+			statement=connection.prepareStatement("Insert into staffs_list (staff_id,staff_name,role,role_id) values (?,?,?,?)");
+			statement.setInt(1, staff_id);
+			statement.setString(2, username);
+			statement.setString(3, role);
+			statement.setInt(4, role_id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
