@@ -169,7 +169,7 @@ public class ShowView {
 		System.out.println("+--------------------------------------------+");
 		System.out.printf("| %-17s | %-15s | %-11s |\n", currentBowler, currentBatter, nonStriker);
 		System.out.println("+--------------------------------------------+");
-		System.out.printf("| Overs: %d                                  |\n", over-1);
+		System.out.printf("| Overs: %d                                  |\n", over);
 		System.out.println("+--------------------------------------------+");
 		System.out.println("|  Runs  |  Wickets  |  Extras  |  Total  |");
 		System.out.println("+--------------------------------------------+");
@@ -220,11 +220,11 @@ public class ShowView {
 		System.out.println("+-----------------------------------------------------+");
 		System.out.println("\t "+ showViewModel.current.getTeamA().getTeam()+" Score-Card \t");
 		System.out.println("+-----------------------------------------------------+");
-		String[][] teamMembers=showViewModel.current.getTeamA().getTeamMembers();
 	    System.out.printf("| %-19s | %-15s |\n", "Player Name", "Scored");
 	    System.out.println("+---------------------------------------------------+");
+	    String[][] teamMembers=showViewModel.current.getTeamA().getTeamMembers();
 	    for (int i = 0; i < 11; i++) {
-	    	if(showViewModel.teamA.getIndivualScore().containsKey(Integer.valueOf(teamMembers[i][2])))
+	    	if(showViewModel.current.getTeamA().getIndivualScore().containsKey(Integer.valueOf(teamMembers[i][2])))
 	    	{
 	    		System.out.printf("| %-19s | %-17s |\n", teamMembers[i][0], showViewModel.current.getTeamA().getIndivualScore().get(Integer.valueOf(teamMembers[i][2])));
 	    	}else {
@@ -234,11 +234,11 @@ public class ShowView {
 	    System.out.println("+---------------------------------------------------+");
 		System.out.println("\t "+ showViewModel.current.getTeamB().getTeam()+" Score-Card \t");
 		System.out.println("+-----------------------------------------------------+");
-		teamMembers=showViewModel.current.getTeamB().getTeamMembers();
 	    System.out.printf("| %-19s | %-15s |\n", "Player Name", "Scored");
 	    System.out.println("+---------------------------------------------------+");
+	    teamMembers=showViewModel.current.getTeamB().getTeamMembers();
 	    for (int i = 0; i < 11; i++) {
-	    	if(showViewModel.teamB.getIndivualScore().containsKey(Integer.valueOf(teamMembers[i][2])))
+	    	if(showViewModel.current.getTeamA().getIndivualScore().containsKey(Integer.valueOf(teamMembers[i][2])))
 	    	{
 	    		System.out.printf("| %-19s | %-17s |\n", teamMembers[i][0], showViewModel.current.getTeamB().getIndivualScore().get(Integer.valueOf(teamMembers[i][2])));
 	    	}else {
@@ -246,6 +246,11 @@ public class ShowView {
 	    	}
 	    }
 	    System.out.println("+---------------------------------------------------+");
+		System.out.println("\t "+ showViewModel.current.getTeamA().getTeam()+" - "+ showViewModel.current.getTeamAScore() + " / " + showViewModel.current.getTeamAWickets() +"\t");
+		System.out.println("+-----------------------------------------------------+");
+	    System.out.println("+---------------------------------------------------+");
+		System.out.println("\t "+ showViewModel.current.getTeamB().getTeam()+" - "+ showViewModel.current.getTeamBScore() + " / " + showViewModel.current.getTeamBWickets() +"\t");
+		System.out.println("+-----------------------------------------------------+");
 	    showViewModel.printWin();
 	}
 	

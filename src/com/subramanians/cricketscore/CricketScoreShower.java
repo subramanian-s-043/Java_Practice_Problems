@@ -13,6 +13,7 @@ public class CricketScoreShower {
 	private void start() {
 		boolean run=true;
 		Scanner scanner=new Scanner(System.in);
+		ShowView show=new ShowView();
 		while(run)
 		{
 		System.out.println("+---------------------------------------------------------------------+");
@@ -20,7 +21,6 @@ public class CricketScoreShower {
 		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println(" 1.Start Match \n 2.View Previous Match \n 3.Exit ");
 		int choice=scanner.nextInt();
-		ShowView show=new ShowView();
 		switch(choice) {
 		case 1:
 			show.getInput();

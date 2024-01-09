@@ -282,6 +282,12 @@ public class ShowViewModel {
 			{
 				currentBall=6;
 				over=chosenForamt.getOvers();
+				if(current.getTeamAScore()==0)
+				{
+					current.setTeamAScore(runs);
+				}else {
+					current.setTeamBScore(runs);
+				}
 				current.getCurrBat().setIndivualScore(striker,indivualScore.get(striker)+temprun);
 				current.getCurrBat().setIndivualScore(nonStriker,indivualScore.get(nonStriker));
 				showView.printSummary();
@@ -407,10 +413,15 @@ public class ShowViewModel {
 	public void updateRepo() {
 		current.setEachOver(eachOver);
 		allMatches.add(current);
+		repo.updateMatch(current);
 		// Logic For Saving to DB
 	}
 
 	public void getMatch(int option) {
+		if(allMatches.isEmpty())
+		{
+			getTeams();	
+		}
 		current=allMatches.get(option-1);
 		showView.printSummary();
 	}

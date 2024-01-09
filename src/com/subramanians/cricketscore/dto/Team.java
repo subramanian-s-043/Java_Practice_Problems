@@ -32,7 +32,9 @@ public class Team {
 	public void setIndivualScore(int pos,int score) {
 		this.indivualScore.put(pos, score);
 	}
-
+	public void setIndivualScore(Map<Integer,Integer> scores) {
+		this.indivualScore=scores;
+	}
 	public int getTeamId() {
 		return teamId;
 	}
