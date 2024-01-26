@@ -13,7 +13,7 @@ This repository contains various branches, each branch has each category of prob
 - **stackAndQueue Branch:**
   - Console application which implement stack and queue
 
-## Packages
+## Project-Packages
 
 List of packages within this **main Branch**.
 
