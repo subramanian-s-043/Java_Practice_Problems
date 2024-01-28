@@ -1,38 +1,45 @@
-Train Reservation System
+# Train Reservation System
 
-Features:
-•	Can able to book multiple trains across multiple destination.
-•	Any person can view their booked ticket using an ID generated at the time of booking.
-•	The passenger only able to cancel the ticket before the departure of the train.
-Train Java:
-•	trainNo: Int
-•	trainName: String
-•	trainSource: String
-•	trainDestination: String
-•	trainTravelDuration: Time
-•	trainDepature: Time
-•	trainArrival: Time
+## Features:
 
-Passenger Java:
-•	passengerID: Auto-incremented
-•	passengerName: String
-•	passengerAge: byte
-•	ticketStatus: byte
-•	trainNo: Int
-•	berthPreference: String
-•	allottedSeat: String
+- Book multiple trains across multiple destinations.
+- View booked tickets using a generated ID at the time of booking.
+- Passengers can cancel tickets before the departure of the train.
 
-Phase-I:
-•	Able to view list of available trains between source and destination
-•	implement RAC , Waiting List features.
-•	The cancellation of ticket, will enable the passengers in RAC to make use of it.
-•	Use json files to save and retrieve the train availability.
-Phase-II:
-•	Will able to book ticket across different trains and different dates.
-•	Running status of train updated based on dates.
-•	Migration from json to MySql database. 
+## Train Java:
 
-//ideas
-	create admin and user view
-	make admin to add trains and routes, save it as json file format
-	retrive and show the details from the same file.
+### Attributes:
+
+- `trainNo`: Int
+- `trainName`: String
+- `trainSource`: String
+- `trainDestination`: String
+- `trainTravelDuration`: Time
+- `trainDepature`: Time
+- `trainArrival`: Time
+
+## Passenger Java:
+
+### Attributes:
+
+- `passengerID`: Auto-incremented
+- `passengerName`: String
+- `passengerAge`: byte
+- `ticketStatus`: byte
+- `trainNo`: Int
+- `berthPreference`: String
+- `allottedSeat`: String
+
+## Key Features:
+
+1. **View Available Trains:**
+   - View a list of available trains between the source and destination.
+
+2. **RAC and Waiting List:**
+   - Implement RAC (Reservation Against Cancellation) and Waiting List features.
+
+3. **Cancellation Handling:**
+   - Cancellation of tickets will enable passengers in RAC to utilize the freed-up seats.
+
+4. **JSON File Storage:**
+   - Utilize JSON files for saving and retrieving train availability data.
