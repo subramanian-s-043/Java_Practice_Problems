@@ -1,12 +1,12 @@
-## Requirement Analysis for Online Store Chat-Bot
+# Requirement Analysis for Online Store Chat-Bot
 
-# Features:
+### Features:
  - Chat-bot for online store.
  - The chat-bot list and respond to the user with different languages.
  - Navigation between products is ease.
  - Shows all the available products with their price and description.
 
-# Requirement Analysis:
+### Requirement Analysis:
  - To maintain the product price, description and details in json format.
  - Create User-defined stack to achieve navigation.
  - Create method to read the data from json file.
