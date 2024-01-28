@@ -32,7 +32,7 @@ List of packages within this **main Branch**.
     - Here, various pattern printing problems, includes pydramid printing.
 
    - **com.subramanian.practice:**
-     - Some of the problems practiced using IDE during the trainaing period.
+     - Some of the problems practiced using IDE during the training period.
      - Check out my Leetcode profile : https://leetcode.com/subbu1902/
 
 ### Prerequisites
