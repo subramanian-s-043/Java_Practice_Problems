@@ -39,19 +39,17 @@ public class GetDetailsView {
 		}while(getDetails.validateSnakes(numberOfSnakes));
 		for(int i=0;i<numberOfSnakes;i++)
 		{
-			int[] start=new int[2];
-			int[] end=new int[2];
-			printMessage("Enter the Row and Column head of Snake "+(i+1)+" :");
+			int startpos;
+			int endpos;
+			printMessage("Enter the head of Snake "+(i+1)+" :");
 			do {
-				start[0]=scanner.nextInt();
-				start[1]=scanner.nextInt();
-			}while(getDetails.validatePosition(start[0],start[1]));
-			printMessage("Enter the Row and Column tail of Snake "+(i+1)+" :");
+				startpos=scanner.nextInt();
+			}while(getDetails.validatePosition(startpos));
+			printMessage("Enter the tail of Snake "+(i+1)+" :");
 			do {
-				end[0]=scanner.nextInt();
-				end[1]=scanner.nextInt();
-			}while(getDetails.validatePosition(end[0],end[1]));
-			getDetails.setSnakes(start,end);
+				endpos=scanner.nextInt();
+			}while(getDetails.validatePosition(endpos));
+			getDetails.setSnakes(startpos,endpos);
 		}
 	}
 	
@@ -64,19 +62,17 @@ public class GetDetailsView {
 		}while(getDetails.validateLadders(numberOfLadders));
 		for(int i=0;i<numberOfLadders;i++)
 		{
-			int[] start=new int[2];
-			int[] end=new int[2];
-			printMessage("Enter the Row and Column start of Ladder "+(i+1)+" :");
+			int startpos;
+			int endpos;
+			printMessage("Enter the start of Ladder "+(i+1)+" :");
 			do {
-				start[0]=scanner.nextInt();
-				start[1]=scanner.nextInt();
-			}while(getDetails.validatePosition(start[0],start[1]));
-			printMessage("Enter the Row and Column end of Ladder "+(i+1)+" :");
+				startpos=scanner.nextInt();
+			}while(getDetails.validatePosition(startpos));
+			printMessage("Enter the end of Ladder "+(i+1)+" :");
 			do {
-				end[0]=scanner.nextInt();
-				end[1]=scanner.nextInt();
-			}while(getDetails.validatePosition(end[0],end[1]));
-			getDetails.setLadders(start,end);
+				endpos=scanner.nextInt();
+			}while(getDetails.validatePosition(endpos));
+			getDetails.setLadders(startpos,endpos);
 		}		
 	}
 	

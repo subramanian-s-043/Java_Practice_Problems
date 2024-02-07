@@ -11,13 +11,14 @@ public class PlayView {
 	
 	public void start() {
 		Scanner scanner=new Scanner(System.in);
-		while(playViewModel.isPlaying)
-		{
-			printMessage("Player "+playViewModel.getCurrentPlayer()+" turn: ");
-			printMessage("Enter to Roll the Dice !!");
-			scanner.next();
-			playViewModel.rollDice();
-		}
+		System.out.println("Minimum Number Of Moves required to complete the game: "+playViewModel.getMinSteps());
+//		while(playViewModel.isPlaying)
+//		{
+//			printMessage("Player "+playViewModel.getCurrentPlayer()+" turn: ");
+//			printMessage("Enter to Roll the Dice !!");
+//			scanner.nextLine();
+//			playViewModel.rollDice();
+//		}
 	}
 	
 	public void printMessage(String msg) {

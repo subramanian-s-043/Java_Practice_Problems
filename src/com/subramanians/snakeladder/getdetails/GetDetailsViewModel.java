@@ -1,7 +1,9 @@
 package com.subramanians.snakeladder.getdetails;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import com.subramanians.snakeladder.dto.Players;
 import com.subramanians.snakeladder.repo.Repository;
@@ -39,8 +41,8 @@ public class GetDetailsViewModel {
 		return false;
 	}
 
-	public boolean validatePosition(int i, int j) {
-		if(i >= board.length || j>=board[0].length)
+	public boolean validatePosition(int i) {
+		if(i >= board.length * board.length)
 		{
 			getdetailsView.showError("Enter Valid Position: ");
 			return true;
@@ -57,11 +59,11 @@ public class GetDetailsViewModel {
 		return false;
 	}
 
-	public void setSnakes(int[] start, int[] end) {
+	public void setSnakes(int start, int end) {
 		repo.setSnakes(start,end);
 	}
 
-	public void setLadders(int[] start, int[] end) {
+	public void setLadders(int start, int end) {
 		repo.setLadders(start,end);
 		
 	}
@@ -73,5 +75,4 @@ public class GetDetailsViewModel {
 	public void setPlayers() {
 		repo.setPlayers(numberOfPlayers);
 	}
-	
 }

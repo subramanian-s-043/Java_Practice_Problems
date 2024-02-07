@@ -1,5 +1,6 @@
 package com.subramanians.snakeladder.repo;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.subramanians.snakeladder.dto.Players;
@@ -8,6 +9,8 @@ public class Repository {
 	static Repository repo;
 	String[][] board;
 	List<Players> numbersOfPlayers;
+	HashMap<Integer, Integer> snakes=new HashMap<>();
+	HashMap<Integer,Integer> ladders=new HashMap<>();
 	
 	public static Repository getInstance() {
 		if(repo==null)
@@ -25,12 +28,12 @@ public class Repository {
 		return board;
 	}
 
-	public void setSnakes(int[] start, int[] end) {
-		board[start[0]][start[1]]="H "+String.valueOf(end[0])+" "+String.valueOf(end[1]);
+	public void setSnakes(int start, int end) {
+		snakes.put(start, end);
 	}
 
-	public void setLadders(int[] start, int[] end) {
-		board[start[0]][start[1]]="L "+String.valueOf(end[0])+" "+String.valueOf(end[1]);
+	public void setLadders(int start, int end) {
+		ladders.put(start, end);
 		
 	}
 
@@ -44,5 +47,13 @@ public class Repository {
 	
 	public List<Players> getNumberOfPlayers(){
 		return numbersOfPlayers;
+	}
+
+	public HashMap<Integer, Integer> getSnakes() {
+		return snakes;
+	}
+
+	public HashMap<Integer, Integer> getLadders() {
+		return ladders;
 	}
 }
