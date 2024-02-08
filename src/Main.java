@@ -14,7 +14,7 @@ public class Main {
 	}
 	private static String initialPath() {
 		try {
-			return new File(".").getCanonicalPath() + "\\src\\com\\subramanians";
+			return new File(".").getCanonicalPath() + "src\\com\\subramanians";
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
