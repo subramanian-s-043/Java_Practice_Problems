@@ -121,4 +121,21 @@ public class FlightRepo {
 		return false;
 	}
 
+
+	public Passenger getPassengerById(int id) {
+		for(int i=0;i<passengers.size();i++)
+		{
+			Passenger curr=passengers.get(i);
+			if(curr.getId()==id)
+			{
+				return curr;
+			}
+		}
+		return null;
+	}
+	
+	public void removeTicket(Ticket ticket)
+	{
+		tickets.remove(ticket);
+	}
 }

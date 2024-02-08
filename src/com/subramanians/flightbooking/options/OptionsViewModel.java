@@ -191,4 +191,41 @@ public class OptionsViewModel {
 		
 	}
 
+	public void getPassengerById(int id) {
+		Passenger retrieve = repo.getPassengerById(id);
+		if(retrieve!=null)
+		{
+			printPassenger(retrieve);
+		}else {
+			optionsView.print("Invalid Passenger Id");
+		}
+	}
+
+	private void printPassenger(Passenger retrieve) {
+		optionsView.print((1)+". name: "+retrieve.getName()+" || Age: "+retrieve.getAge()+" || Gender "
+				+ ": "+retrieve.getGender()+" || Id : "+retrieve.getId());
+		
+	}
+
+	public void changeStatus(int pnr, int status) {
+		Ticket retrieve = repo.getTicket(pnr);
+		if(status==1)
+		{
+			retrieve.setStatus("CNF");
+		}else {
+			retrieve.setStatus("CANCEL");
+		}
+		repo.removeTicket(retrieve);
+		repo.addTicket(retrieve);
+		optionsView.print("Ticket Details");
+		optionsView.print("");
+		optionsView.print("Flight Details");
+		optionsView.print("-----------------");
+		printFlightDetails(retrieve.getFlight(), retrieve.getTotalFare());
+		optionsView.print("");
+		optionsView.print("Passenger Details");
+		optionsView.print("-----------------");
+		printPassengerDetails(retrieve.getPassengers(),retrieve.getStatus());
+	}
+
 }

@@ -102,13 +102,21 @@ public class OptionsView {
 	}
 
 	public void searchPassenger() {
-		// TODO Auto-generated method stub
+		Scanner scanner = new Scanner(System.in);
+		print("Enter the Passenger Id: ");
+		int id=scanner.nextInt();
+		optionsViewModel.getPassengerById(id);
 		
 	}
 
 	public void changeStatus() {
-		// TODO Auto-generated method stub
-		
+		Scanner scanner = new Scanner(System.in);
+		print("Enter Pnr Number: ");
+		int pnr = scanner.nextInt();
+		print("Enter Ticket Status: ");
+		print("1.CNF \n 2.CANCEL");
+		int status = scanner.nextInt();
+		optionsViewModel.changeStatus(pnr,status);
 	}
 
 	public void flightRoutes() {
