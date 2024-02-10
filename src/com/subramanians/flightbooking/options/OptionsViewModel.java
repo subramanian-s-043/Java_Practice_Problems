@@ -1,6 +1,7 @@
 package com.subramanians.flightbooking.options;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.subramanians.flightbooking.dto.Flight;
@@ -13,7 +14,7 @@ public class OptionsViewModel {
 	FlightRepo repo;
 	List<Flight> available;
 	Flight selected;
-	List<Passenger> currentPassengers;
+	List<Passenger> currentPassengers=new ArrayList<>();
 	boolean run = true;
 	
 	public OptionsViewModel(OptionsView optionsView)
@@ -89,7 +90,7 @@ public class OptionsViewModel {
 	}
 
 	public void addPassenger(String name, int age, String gender, int id) {
-		Passenger newPassenger = new Passenger(age,name,id,gender);
+		Passenger newPassenger = new Passenger(id,name,age,gender);
 		currentPassengers.add(newPassenger);
 		repo.addPassenger(newPassenger);
 		
@@ -118,6 +119,7 @@ public class OptionsViewModel {
 			optionsView.print("");
 			optionsView.print("Flight Details");
 			optionsView.print("-----------------");
+			optionsView.print("PNR No. : "+newTicket.getPnrNumber());
 			printFlightDetails(selected, totalFare);
 			optionsView.print("");
 			optionsView.print("Passenger Details");
@@ -135,6 +137,7 @@ public class OptionsViewModel {
 			optionsView.print("");
 			optionsView.print("Flight Details");
 			optionsView.print("-----------------");
+			optionsView.print("PNR No. : "+retrieved.getPnrNumber());
 			printFlightDetails(retrieved.getFlight(), retrieved.getTotalFare());
 			optionsView.print("");
 			optionsView.print("Passenger Details");
@@ -156,10 +159,10 @@ public class OptionsViewModel {
 
 	public void printFlightDetails(Flight curr,int fare) {
 		Duration duration = Duration.between(curr.getDepature(), curr.getArrival());
-		long travelTime = duration.toHours();
+		long travelTime = Math.abs(duration.toHours());
 		optionsView.print("Flight no: "+curr.getFlightNumber()+" || name: "+curr.getFlightName()+" || Depature "
 				+ "Time: "+curr.getDepature().toString()+" || Arrival Time: "+curr.getArrival().toString()+" || "
-						+ "Travel Time: "+travelTime+" Fare:"+fare+" seats: "+curr.getTotalSeats());
+						+ "Travel Time: "+travelTime+" || Fare:"+fare+" || seats: "+curr.getTotalSeats());
 	}
 
 	public void showBookedTickets() {
@@ -172,6 +175,7 @@ public class OptionsViewModel {
 			optionsView.print("");
 			optionsView.print("Flight Details");
 			optionsView.print("-----------------");
+			optionsView.print("PNR No. : "+curr.getPnrNumber());
 			printFlightDetails(curr.getFlight(), curr.getTotalFare());
 			optionsView.print("");
 			optionsView.print("Passenger Details");

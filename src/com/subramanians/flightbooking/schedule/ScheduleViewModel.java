@@ -48,6 +48,7 @@ public class ScheduleViewModel {
 		try {
 			repo.saveSchedule();
 		} catch (IOException e) {
+			e.printStackTrace();
 			scheduleView.print("Error In Saving Schedules");
 		}
 		

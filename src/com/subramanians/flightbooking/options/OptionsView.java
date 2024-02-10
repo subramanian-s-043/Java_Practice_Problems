@@ -19,8 +19,8 @@ public class OptionsView {
 		while(optionsViewModel.run)
 		{
 			print("Enter your Option: ");
-			print("(1 -  Booking, 2 - Get PNR Status, 3 - Booked Tickets, 4 - Cancel Tickets, 5 - Search Passenger, "
-					+ "6 - Change ticket status of the passenger, 7 - List Flight Routes, 8 - Add Flight Routes, 9 - Exit");
+			print("(1 -  Booking, 2 - Get PNR Status, 3 - Booked Tickets, 4 - Cancel Tickets, 5 - Search Passenger, \n"
+					+ "6 - Change ticket status of the passenger, 7 - List Flight Routes, 8 - Add Flight Routes, 9 - Exit)");
 			int selected;
 			do {
 				selected = scanner.nextInt();
@@ -48,6 +48,7 @@ public class OptionsView {
 			optionsViewModel.selectedFlight(flightnumber);
 			print("Enter Number Of Passengers: ");
 			int passenger = scanner.nextInt();
+			scanner.nextLine();
 			for(int i=0;i<passenger;i++)
 			{
 				print("Enter Passenger "+(i+1)+" details: ");
@@ -62,6 +63,7 @@ public class OptionsView {
 				print("Id: ");
 				int id = scanner.nextInt();
 				optionsViewModel.addPassenger(name,age,gender,id);
+				scanner.nextLine();
 			}
 			int totalFare = optionsViewModel.selected.getFare() * passenger;
 			print("Total Fare: "+ totalFare);

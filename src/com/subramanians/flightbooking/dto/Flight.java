@@ -1,9 +1,14 @@
 package com.subramanians.flightbooking.dto;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.List;
 
-public class Flight {
+public class Flight implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int flightNumber;
 	private String flightName;
 	private LocalTime depature;
